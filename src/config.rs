@@ -3,7 +3,8 @@
 
 use std::env;
 
-struct Config {}
+/// Handles configuration data
+pub struct Config {}
 
 impl Config {
     /// Get a single configuration first from ENV then falling back to hard coded defaults

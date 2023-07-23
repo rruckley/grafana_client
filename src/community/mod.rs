@@ -1,22 +1,26 @@
-mod admin;
-mod alerting_provisioning;
-mod alerting;
-mod annotations;
-mod authentication;
-mod correlations;
-mod dashboard_permissions;
-mod dashboard_versions;
-mod dashboard;
-mod data_source;
-mod folder_permissions;
-mod library_element;
-mod organization;
-mod other;
-mod playlists;
-mod preferences;
-mod query_history;
-mod search;
-mod short_url;
-mod snapshot;
-mod team;
-mod user;
+
+//! This module contains all of the Community APIs
+//! 
+
+pub mod admin;
+pub mod alerting_provisioning;
+pub mod alerting;
+pub mod annotations;
+pub mod authentication;
+pub mod correlations;
+pub mod dashboard_permissions;
+pub mod dashboard_versions;
+pub mod dashboard;
+pub mod data_source;
+pub mod folder_permissions;
+pub mod library_element;
+pub mod organization;
+pub mod other;
+pub mod playlists;
+pub mod preferences;
+pub mod query_history;
+pub mod search;
+pub mod short_url;
+pub mod snapshot;
+pub mod team;
+pub mod user;

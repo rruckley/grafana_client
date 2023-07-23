@@ -7,10 +7,11 @@ use config;
 /// Client Structure
 pub struct Client {
     // Commoon
-    config : Config,
+    pub config : Config,
     // Community
-    admin : Admin,
-    annotations : Annotations,
+    pub admin : Admin,
+    pub annotations : Annotations,
+    pub alerting_provisioning : AlertingProvisioning,
 }
 
 
