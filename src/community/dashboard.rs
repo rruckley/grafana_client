@@ -1,5 +1,6 @@
 //! Dashboard Module
 //! 
+use crate::error::GrafanaError;
 
 /// Dashboard Model
 pub struct DashboardModel {
@@ -8,30 +9,25 @@ pub struct DashboardModel {
     title : String,
     tags : Option<Vec<String>>,
     timezone : String,
-    schemaVersion : u16,
+    schema_version : u16,
     refresh : String,
 }
 /// Data for creating a new dashboard
 pub struct CreateDashboard {
     dashboard : DashboardModel,
-    folderId : u16,
-    folderUid: Option<String>,
+    folder_id : u16,
+    folder_uid: Option<String>,
     message : String,
     overwrite : bool,
-}
-
-/// Dashboard Error
-pub struct DashboardError {
-    pub message : String,
-    pub status : String,
 }
 
 /// Dashboard API Structure
 pub struct Dashboard {}
 
 impl Dashboard {
-    pub fn create(create : CreateDashboard) -> Result<DashboardModel,DashboardError> {
-        Err(DashboardError {
+    /// Create a new dashboard in Grafana
+    pub fn create(create : CreateDashboard) -> Result<DashboardModel,GrafanaError> {
+        Err(GrafanaError {
             message : "Not implemented".to_string(),
             status : "ERROR".to_string(),
         })
@@ -39,7 +35,7 @@ impl Dashboard {
     fn validate_for_create(create : CreateDashboard) -> Result<(),String> {
         match create.dashboard.id {
             Some(i) => Err("Cannot specifiy id on create".to_string()),
-            to_string=> Ok(()),
+            None => Ok(()),
         }
     }
 }
