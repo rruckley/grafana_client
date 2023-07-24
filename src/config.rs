@@ -4,9 +4,16 @@
 use std::env;
 
 /// Handles configuration data
-pub struct Config {}
+pub struct Config {
+    host : String,
+}
 
 impl Config {
+    pub fn new(host : String) -> Config {
+        Config {
+            host
+        }
+    }
     /// Get a single configuration first from ENV then falling back to hard coded defaults
     pub fn get(item : & str) -> Option<String> {
         match env::var(item) {
