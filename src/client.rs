@@ -6,6 +6,7 @@ use crate::config::Config;
 use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
+use crate::community::authentication::Authentication;
 
 /// Client Structure
 pub struct Client {
@@ -17,6 +18,8 @@ pub struct Client {
     pub annotations : Annotations,
     /// Alert Provsioning API
     pub alerting_provisioning : AlertingProvisioning,
+    /// Authentication API
+    pub authentication : Authentication,
 }
 
 
@@ -28,7 +31,7 @@ impl Client {
             admin : Admin {},
             annotations : Annotations {  },
             alerting_provisioning : AlertingProvisioning {  },
-
+            authentication : Authentication {  },
         }
     }
 }
