@@ -36,4 +36,10 @@ impl Dashboard {
             status : "ERROR".to_string(),
         })
     }
+    fn validate_for_create(create : CreateDashboard) -> Result<(),String> {
+        match create.dashboard.id {
+            Some(i) => Err("Cannot specifiy id on create".to_string()),
+            to_string=> Ok(()),
+        }
+    }
 }
