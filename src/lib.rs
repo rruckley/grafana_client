@@ -9,8 +9,9 @@
 
 /// Common modules
 pub mod config;
+pub mod client;
 
-/// Default modules
+/// Community modules, included by default
 pub mod community;
 
 /// Enterprise modules
