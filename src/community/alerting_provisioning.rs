@@ -3,4 +3,4 @@
 
 
 /// Alerting Provisioning Struct
-struct AlertingProvisioning {}
+pub struct AlertingProvisioning {}
