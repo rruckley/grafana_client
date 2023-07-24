@@ -5,10 +5,12 @@ use std::env;
 
 /// Handles configuration data
 pub struct Config {
+    /// Private field
     host : String,
 }
 
 impl Config {
+    /// Create a new configuration instance
     pub fn new(host : String) -> Config {
         Config {
             host
