@@ -10,6 +10,7 @@
 /// Common modules
 pub mod config;
 pub mod client;
+pub mod error;
 
 /// Community modules, included by default
 pub mod community;
