@@ -1,6 +1,7 @@
 //! Dashboard Module
 //! 
 use crate::error::GrafanaError;
+use log::{info,error};
 
 /// Dashboard Model
 pub struct DashboardModel {
@@ -27,6 +28,10 @@ pub struct Dashboard {}
 impl Dashboard {
     /// Create a new dashboard in Grafana
     pub fn create(create : CreateDashboard) -> Result<DashboardModel,GrafanaError> {
+        match Dashboard::validate_for_create(create) {
+            Ok(_) => info!("Create payload ok"),
+            Err(e) => error!("Payload failed validation: {}",e),
+        } 
         Err(GrafanaError {
             message : "Not implemented".to_string(),
             status : "ERROR".to_string(),
@@ -34,7 +39,7 @@ impl Dashboard {
     }
     fn validate_for_create(create : CreateDashboard) -> Result<(),String> {
         match create.dashboard.id {
-            Some(i) => Err("Cannot specifiy id on create".to_string()),
+            Some(_) => Err("Cannot specifiy id on create".to_string()),
             None => Ok(()),
         }
     }
