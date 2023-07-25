@@ -1,6 +1,7 @@
 //! Grafana Client 
 //! 
 
+use crate::error::GrafanaError;
 
 use crate::config::Config;
 use crate::community::admin::Admin;
@@ -33,5 +34,9 @@ impl Client {
             alerting_provisioning : AlertingProvisioning {  },
             authentication : Authentication {  },
         }
+    }
+
+    pub fn connect() -> Result<(),GrafanaError> {
+        Ok(())
     }
 }
