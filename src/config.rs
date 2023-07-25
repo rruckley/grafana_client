@@ -16,6 +16,10 @@ impl Config {
             host
         }
     }
+    /// Return URL for connecting to Grafana
+    pub fn url(&self) -> String {
+        format!("https://{}",self.host).to_string()
+    }
     /// Get a single configuration first from ENV then falling back to hard coded defaults
     pub fn get(item : & str) -> Option<String> {
         match env::var(item) {
