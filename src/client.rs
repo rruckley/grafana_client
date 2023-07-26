@@ -8,6 +8,7 @@ use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
+use crate::community::dashboard::Dashboard;
 
 /// Client Structure
 pub struct Client {
@@ -21,6 +22,8 @@ pub struct Client {
     pub alerting_provisioning : AlertingProvisioning,
     /// Authentication API
     pub authentication : Authentication,
+    /// Dashboard API
+    pub dashboard : Option<Dashboard>,
 }
 
 
@@ -33,9 +36,11 @@ impl Client {
             annotations : Annotations {  },
             alerting_provisioning : AlertingProvisioning {  },
             authentication : Authentication {  },
+            dashboard : None,
         }
     }
 
+    /// Connect to Grafana
     pub fn connect() -> Result<(),GrafanaError> {
         Ok(())
     }
