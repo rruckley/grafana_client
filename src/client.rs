@@ -1,14 +1,14 @@
-//! Grafana Client 
+//! Grafana Client
 //! 
-
-use crate::error::GrafanaError;
-
 use crate::config::Config;
 use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
+
+use serde::Serialize;
+use reqwest::*;
 
 /// Client Structure
 pub struct Client {
@@ -40,8 +40,21 @@ impl Client {
         }
     }
 
+    /// Send compatible struct through to Grafana
+    pub async fn send<T>(&self, payload : T) -> Result<String> 
+    where T : Sized + Serialize,
+    {
+        let client = reqwest::Client::new();
+        match client.post(self.config.url())
+            .json(&payload)
+            .send().await {
+                Ok(_) => Ok("Yay".to_string()),
+                Err(e) => Err(e),
+            }
+    }
+
     /// Connect to Grafana
-    pub fn connect() -> Result<(),GrafanaError> {
-        Ok(())
+    pub fn connect() -> Result<String> {
+        Ok(String::from("Wow!"))
     }
 }
