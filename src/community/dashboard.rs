@@ -3,10 +3,16 @@
 use crate::error::GrafanaError;
 use log::{info,error};
 
-/// Dashboard Model
+/// Panel Model
+pub struct PanelModel {
+
+}
+
+/// Complete Dashboard Model
 pub struct DashboardModel {
     id : Option<String>,
     uid : Option<String>,
+    panels : Option<Vec<PanelModel>>,
     title : String,
     tags : Option<Vec<String>>,
     timezone : String,
@@ -17,16 +23,22 @@ pub struct DashboardModel {
 
 /// Dashboard API Structure
 pub struct Dashboard {
+    /// The complete dashboard model, id = null to create a new dashboard.
     dashboard : DashboardModel,
+    folder_id : Option<u16>,
+    folder_uid: Option<String>,
+    message : Option<String>,
+    overwrite: bool,
 }
 
 impl Dashboard {
     /// Create a new dashboard in Grafana
     /// # Examples
     /// ```
-    /// let builder = DashboardBuilder("My Dashboard").build().create();
+    /// let builder = DashboardBuilder("My Dashboard").build().create("New Dashboard");
     /// ```
-    pub fn create(&self) -> Result<DashboardModel,GrafanaError> {
+    pub fn create(mut self,message : String) -> Result<DashboardModel,GrafanaError> {
+        self.message = Some(message);
         match Dashboard::validate_for_create(self) {
             Ok(_) => info!("Create payload ok"),
             Err(e) => error!("Payload failed validation: {}",e),
@@ -36,7 +48,7 @@ impl Dashboard {
             status : "ERROR".to_string(),
         })
     }
-    fn validate_for_create(dashboard : &Dashboard) -> Result<(),String> {
+    fn validate_for_create(dashboard : Dashboard) -> Result<(),String> {
         match &dashboard.dashboard.id {
             Some(_i) => Err("Cannot specifiy id on create".to_string()),
             None => Ok(()),
@@ -48,6 +60,7 @@ impl Dashboard {
 pub struct DashboardBuilder {
     id : Option<String>,
     uid : Option<String>,
+    panels : Option<Vec<PanelModel>>,
     title : String,
     tags : Option<Vec<String>>,
     timezone : Option<String>,
@@ -65,6 +78,7 @@ impl DashboardBuilder {
         DashboardBuilder {
             id : None,
             uid : None,
+            panels : None,
             title,
             tags : None,
             timezone : None,
@@ -82,11 +96,26 @@ impl DashboardBuilder {
         self
     }
 
+    /// Add panel models
+    /// # Examples
+    /// ```
+    /// let some_panels = vec![PanelBuilder::new("my panel").build()];
+    /// let dashboard = DashboardBuilder("My Dashboard")
+    ///     .panels(some_panels)
+    ///     .build()
+    ///     .create("New Dashboard");
+    /// ```
+    pub fn panels(mut self, panels : Vec<PanelModel>) -> DashboardBuilder {
+        self.panels = Some(panels);
+        self
+    }
+
     /// Build the Dashboard
     pub fn build(self) -> Dashboard {
         let model = DashboardModel {
             id : self.id,
             uid : self.uid,
+            panels : None,
             title : self.title,
             tags : None,
             timezone : self.timezone.unwrap_or_default(),
@@ -95,6 +124,10 @@ impl DashboardBuilder {
         };
         Dashboard {
             dashboard : model,
+            folder_id : Some(0),
+            folder_uid : None,
+            message : None,
+            overwrite : false,
         }
     }
 }
