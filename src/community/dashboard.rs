@@ -56,6 +56,11 @@ impl Dashboard {
     }
 }
 
+/// Builder for Panels
+pub struct PanelBuilder {
+    
+}
+
 /// Builder for Dashboard
 pub struct DashboardBuilder {
     id : Option<String>,
