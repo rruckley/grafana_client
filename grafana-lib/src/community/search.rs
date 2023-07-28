@@ -21,6 +21,7 @@ impl Search {
         Err(GrafanaError { message: String::from("Dashboard Search: Not implemented"), status: String::from("-1") })
     }
 
+    /// Folder Search using query string
     pub fn folder(&self, query : Option<String>) -> Result<Vec<FolderResult>,GrafanaError> {
         Err(GrafanaError { message: String::from("Folder Search: Not implemented"), status: String::from("-1") })
     }
