@@ -1,4 +1,9 @@
 [workspace]
+name = "Grafana Client Library"
+version = "0.1.0"
+edition = "2021"
+description = "Sample usage of Grafana Client"
+authors = ["Ryan Ruckley <rruckley@gmail.com>"]
 
 members = [
     "grafana-lib",
