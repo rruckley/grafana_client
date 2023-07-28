@@ -54,7 +54,7 @@ impl Client {
             },
         };
         match search.dashboard(query) {
-            Ok(v) => {
+            Ok(_v) => {
                 String::from("Got some results")
             },
             Err(e) => e.message,
@@ -62,12 +62,30 @@ impl Client {
     }
 
     /// Search Folders
-    pub fn search_folders(&self, query : Option<String>) -> String {
-        String::from("Folder Search: Not implemented")
+    pub fn search_folders(mut self, query : Option<String>) -> String {
+        let search = match self.search {
+            Some(s) => s,
+            None => {
+                // Store instance for next query
+                self.search = Some( Search {});
+                self.search.unwrap()
+            },
+        };
+        match search.folder(query) {
+            Ok(_v) => {
+                String::from("Got some results")
+            },
+            Err(e) => e.message,
+        }
+    }
+
+    async fn get(&self, url : String) -> Result<String> {
+        let _body = reqwest::get(url).await?;
+        Ok(String::from("It was good"))
     }
 
     /// Send compatible struct through to Grafana
-    async fn call<T>(&self, payload : T) -> Result<String> 
+    async fn post<T>(&self, payload : T) -> Result<String> 
     where T : Sized + Serialize,
     {
         let client = reqwest::Client::new();
