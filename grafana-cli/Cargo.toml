@@ -10,4 +10,6 @@ name = "grafana-cli"
 path = "src/main.rs"
 
 [dependencies]
+clap = "4.3.19"
+env_logger = "0.10.0"
 grafana-lib = { path = "../grafana-lib" }
