@@ -1,6 +1,13 @@
 [package]
-name = "Grafana CLI"
+name = "grafana_cli"
 version = "0.1.0"
 edition = "2021"
 description = "Sample usage of Grafana Client"
 authors = ["Ryan Ruckley <rruckley@gmail.com>"]
+
+[[bin]]
+name = "grafana-cli"
+path = "src/main.rs"
+
+[dependencies]
+grafana-lib = { path = "../grafana-lib" }
