@@ -17,11 +17,11 @@ pub struct Search {}
 
 impl Search {
     /// Search dashboards according to query string
-    pub fn dashboard(query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
-        Err(GrafanaError { message: String::from("Not implemented"), status: String::from("-1") })
+    pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
+        Err(GrafanaError { message: String::from("Dashboard Search: Not implemented"), status: String::from("-1") })
     }
 
-    pub fn folder(query : Option<String>) -> Result<Vec<FolderResult>,GrafanaError> {
-        Err(GrafanaError { message: String::from("Not implemented"), status: String::from("-1") })
+    pub fn folder(&self, query : Option<String>) -> Result<Vec<FolderResult>,GrafanaError> {
+        Err(GrafanaError { message: String::from("Folder Search: Not implemented"), status: String::from("-1") })
     }
 }
