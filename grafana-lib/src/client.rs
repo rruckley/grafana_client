@@ -6,6 +6,7 @@ use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
+use crate::community::search::Search;
 
 use serde::Serialize;
 use reqwest::*;
@@ -24,6 +25,8 @@ pub struct Client {
     pub authentication : Authentication,
     /// Dashboard API
     pub dashboard : Option<Dashboard>,
+    /// Search API
+    pub search : Option<Search>,
 }
 
 impl Client {
@@ -36,13 +39,29 @@ impl Client {
             alerting_provisioning : AlertingProvisioning {  },
             authentication : Authentication {  },
             dashboard : None,
+            search : Some(Search { }),
         }
     }
 
-    pub fn search_dashboards(&self, query : Option<String>) -> String {
-        String::from("Not implemented")
+    /// Search dashboards
+    pub fn search_dashboards(mut self, query : Option<String>) -> String {
+        let search = match self.search {
+            Some(s) => s,
+            None => {
+                // Store instance for next query
+                self.search = Some( Search {});
+                self.search.unwrap()
+            },
+        };
+        match search.dashboard(query) {
+            Ok(v) => {
+                String::from("Got some results")
+            },
+            Err(e) => e.message,
+        }
     }
 
+    /// Search Folders
     pub fn search_folders(&self, query : Option<String>) -> String {
         String::from("Folder Search: Not implemented")
     }
