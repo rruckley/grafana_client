@@ -1,2 +1,4 @@
 /target
 /Cargo.lock
+/grafana-cli/target
+/grafana-lib/target
