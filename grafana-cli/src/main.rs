@@ -1,7 +1,7 @@
 //! Grafana CLI using the Grafana LIB crate
 //! 
 //! 
-use grafana_lib::client::{Client};
+use grafana_lib::client::Client;
 use clap::{Parser,Subcommand};
 use log::info;
 
