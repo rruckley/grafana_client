@@ -26,7 +26,6 @@ pub struct Client {
     pub dashboard : Option<Dashboard>,
 }
 
-
 impl Client {
     /// Create a new client instance
     pub fn new(url : String) -> Client {
@@ -40,8 +39,16 @@ impl Client {
         }
     }
 
+    pub fn search_dashboards(&self, query : Option<String>) -> String {
+        String::from("Not implemented")
+    }
+
+    pub fn search_folders(&self, query : Option<String>) -> String {
+        String::from("Folder Search: Not implemented")
+    }
+
     /// Send compatible struct through to Grafana
-    pub async fn send<T>(&self, payload : T) -> Result<String> 
+    async fn call<T>(&self, payload : T) -> Result<String> 
     where T : Sized + Serialize,
     {
         let client = reqwest::Client::new();
