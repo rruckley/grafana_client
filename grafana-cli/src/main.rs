@@ -13,7 +13,7 @@ struct Args {
     host: Option<String>,
 
     #[command(subcommand)]
-    command: Commands,
+    command: Option<Commands>,
 }
 
 // CLI commands
@@ -35,19 +35,21 @@ fn main() {
     // Create a client to use for cli
     let client = Client::new(String::from("http://localhost:3000"));
 
-    dbg!(&args.command);
     match args.command {
-        Commands::Dashboard { list } => {
+        Some(Commands::Dashboard { list }) => {
             info!("Executing Dashboard");
             if list {
                 let results = client.search_dashboards(None);
+                println!("Dashboard Results: {}",results);
             }
         },
-        Commands::Folder { list } => {
+        Some(Commands::Folder { list }) => {
             info!("Executing Folder Search");
             if list {
                 let results = client.search_folders(None);
+                println!("Folder results: {}",results);
             }
-        }
+        },
+        None => {},
     }
 }
