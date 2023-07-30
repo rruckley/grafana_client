@@ -31,6 +31,7 @@ pub enum Commands {
 
 fn main() {
     let args = Args::parse();
+    env_logger::init();
 
     // Create a client to use for cli
     let client = Client::new(String::from("http://localhost:3000"));
