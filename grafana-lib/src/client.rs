@@ -8,7 +8,8 @@ use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
 use crate::community::search::Search;
 
-use serde::Serialize;
+use crate::common::api::Api;
+
 use reqwest::*;
 
 /// Client Structure
@@ -39,7 +40,7 @@ impl Client {
             alerting_provisioning : AlertingProvisioning {  },
             authentication : Authentication {  },
             dashboard : None,
-            search : Some(Search { }),
+            search : None,
         }
     }
 
@@ -49,7 +50,8 @@ impl Client {
             Some(s) => s,
             None => {
                 // Store instance for next query
-                self.search = Some( Search {});
+                
+                self.search = Some( Search::new(Config::get("TOKEN").unwrap(),Config::get("HOST").unwrap()));
                 self.search.unwrap()
             },
         };
@@ -67,7 +69,7 @@ impl Client {
             Some(s) => s,
             None => {
                 // Store instance for next query
-                self.search = Some( Search {});
+                self.search = Some( Search::new(Config::get("TOKEN").unwrap(),Config::get("HOST").unwrap()));
                 self.search.unwrap()
             },
         };
