@@ -4,11 +4,13 @@ use crate::common::error::GrafanaError;
 use log::{info,error};
 
 /// Panel Model
+#[derive(PartialEq,Debug)]
 pub struct PanelModel {
-
+    title   : String,
 }
 
 /// Complete Dashboard Model
+#[derive(PartialEq,Debug)]
 pub struct DashboardModel {
     id : Option<String>,
     uid : Option<String>,
@@ -22,6 +24,7 @@ pub struct DashboardModel {
 
 
 /// Dashboard API Structure
+#[derive(PartialEq,Debug)]
 pub struct Dashboard {
     /// The complete dashboard model, id = null to create a new dashboard.
     dashboard : DashboardModel,
@@ -35,6 +38,7 @@ impl Dashboard {
     /// Create a new dashboard in Grafana
     /// # Examples
     /// ```
+    /// use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
     /// let builder = DashboardBuilder("My Dashboard").build().create("New Dashboard");
     /// ```
     pub fn create(mut self,message : String) -> Result<DashboardModel,GrafanaError> {
@@ -58,10 +62,22 @@ impl Dashboard {
 
 /// Builder for Panels
 pub struct PanelBuilder {
-    
+    title : String,
+}
+
+impl PanelBuilder {
+    /// Create a new PanelBuilder object
+    pub fn new(title : String) -> PanelBuilder {
+        PanelBuilder { title } 
+    }
+    /// Build a Panel
+    pub fn build(self) -> PanelModel {
+        PanelModel { title : self.title, }
+    }
 }
 
 /// Builder for Dashboard
+#[derive(PartialEq,Debug)]
 pub struct DashboardBuilder {
     id : Option<String>,
     uid : Option<String>,
@@ -101,10 +117,17 @@ impl DashboardBuilder {
         self
     }
 
+    /// Set the Schema Version of this dashboard
+    pub fn schema_version(mut self, version : u16) -> DashboardBuilder {
+        self.schema_version = version;
+        self
+    }
+
     /// Add panel models
     /// # Examples
     /// ```
-    /// let some_panels = vec![PanelBuilder::new("my panel").build()];
+    /// use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
+    /// let some_panels = vec![PanelBuilder::new(String::from("my panel")).build()];
     /// let dashboard = DashboardBuilder("My Dashboard")
     ///     .panels(some_panels)
     ///     .build()
@@ -124,7 +147,7 @@ impl DashboardBuilder {
             title : self.title,
             tags : None,
             timezone : self.timezone.unwrap_or_default(),
-            schema_version : 0,
+            schema_version : self.schema_version,
             refresh : self.refresh.unwrap_or_default(),
         };
         Dashboard {
@@ -135,4 +158,55 @@ impl DashboardBuilder {
             overwrite : false,
         }
     }
+}
+
+
+#[cfg(test)]
+mod test {
+    use super::*;
+    #[test]
+    fn test_new_dashboard() {
+        let dashboard = DashboardBuilder::new("test".to_string()).build();
+        let test_dashboard = Dashboard {
+            dashboard : DashboardModel {
+                id : None,
+                panels : None,
+                title : String::from("test"),
+                uid : None,
+                timezone : String::from(""),
+                schema_version : 0,
+                tags : None,
+                refresh : String::from(""),
+            },
+            overwrite : false,
+            folder_id  : Some(0),
+            folder_uid : None,
+            message : None,
+        };
+        assert_eq!(dashboard,test_dashboard);
+    }
+    #[test]
+    fn test_dashboard_with_schema_version() {
+        let dashboard = DashboardBuilder::new("test".to_string())
+            .schema_version(1)
+            .build();
+        let test_dashboard = Dashboard {
+            dashboard : DashboardModel {
+                id : None,
+                panels : None,
+                title : String::from("test"),
+                uid : None,
+                timezone : String::from(""),
+                schema_version : 1,
+                tags : None,
+                refresh : String::from(""),
+            },
+            overwrite : false,
+            folder_id  : Some(0),
+            folder_uid : None,
+            message : None,
+        };
+        assert_eq!(dashboard,test_dashboard);
+    }
+
 }
