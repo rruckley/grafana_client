@@ -8,9 +8,8 @@
 #![warn(missing_docs)]
 
 /// Common modules
-pub mod config;
 pub mod client;
-pub mod error;
+pub mod common;
 
 /// Community modules, included by default
 pub mod community;

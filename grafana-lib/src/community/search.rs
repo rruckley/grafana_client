@@ -1,6 +1,6 @@
 //! Search Module
 
-use crate::error::GrafanaError;
+use crate::common::error::GrafanaError;
 
 /// Dashboard Search Results
 pub struct DashboardResult {

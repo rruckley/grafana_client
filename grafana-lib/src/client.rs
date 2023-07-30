@@ -1,6 +1,6 @@
 //! Grafana Client
 //! 
-use crate::config::Config;
+use crate::common::config::Config;
 use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
