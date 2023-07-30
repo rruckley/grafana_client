@@ -1,6 +1,7 @@
 //! Search Module
 
 use crate::common::error::GrafanaError;
+use crate::common::api::Api;
 
 /// Dashboard Search Results
 pub struct DashboardResult {
@@ -13,11 +14,20 @@ pub struct FolderResult {
 }
 
 /// Search Structure
-pub struct Search {}
+pub struct Search {
+    api : Api,
+}
 
 impl Search {
+    pub fn new(host : String, token : String) -> Search {
+        let api = Api::new(token,host);
+        Search {
+            api,
+        }
+    }
     /// Search dashboards according to query string
     pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
+        //let json =
         Err(GrafanaError { message: String::from("Dashboard Search: Not implemented"), status: String::from("-1") })
     }
 
