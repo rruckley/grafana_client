@@ -19,7 +19,7 @@ pub struct Search {
 }
 
 impl Search {
-    /// Create a new Search instance
+    /// Create a new search instance
     pub fn new(host : String, token : String) -> Search {
         let api = Api::new(token,host);
         Search {
@@ -28,7 +28,8 @@ impl Search {
     }
     /// Search dashboards according to query string
     pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
-        //let json =
+        let url = format!("{}?{}",self.api.host,query.unwrap());
+        let json = self.api.get(url);
         Err(GrafanaError { message: String::from("Dashboard Search: Not implemented"), status: String::from("-1") })
     }
 

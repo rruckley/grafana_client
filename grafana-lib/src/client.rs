@@ -1,6 +1,6 @@
 //! Grafana Client
 //! 
-use crate::common::config::Config;
+
 use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
@@ -8,8 +8,13 @@ use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
 use crate::community::search::Search;
 
+use crate::common::config::Config;
+use crate::common::api::Api;
+
 /// Client Structure
 pub struct Client {
+    /// API Instance'
+    pub api : Api,
     /// Common configuration information
     pub config : Config,
     /// Admin API
@@ -29,7 +34,9 @@ pub struct Client {
 impl Client {
     /// Create a new client instance
     pub fn new(url : String) -> Client {
+        let api = Api::new(url.clone(),Config::get("TOKEN").unwrap());
         Client {
+            api,
             config : Config::new(url),
             admin : Admin {},
             annotations : Annotations {  },
