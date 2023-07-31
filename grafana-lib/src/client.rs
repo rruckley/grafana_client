@@ -8,10 +8,6 @@ use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
 use crate::community::search::Search;
 
-use crate::common::api::Api;
-
-use reqwest::*;
-
 /// Client Structure
 pub struct Client {
     /// Common configuration information
@@ -25,9 +21,9 @@ pub struct Client {
     /// Authentication API
     pub authentication : Authentication,
     /// Dashboard API
-    pub dashboard : Option<Dashboard>,
+    dashboard : Option<Dashboard>,
     /// Search API
-    pub search : Option<Search>,
+    search : Option<Search>,
 }
 
 impl Client {
@@ -44,27 +40,31 @@ impl Client {
         }
     }
 
-    /// Search dashboards
-    pub fn search_dashboards(mut self, query : Option<String>) -> String {
-        let search = match self.search {
+    pub fn dashboard(mut self) -> Dashboard {
+        match self.dashboard {
+            Some(d) => d,
+            None => {
+                self.dashboard = Some(Dashboard::new());
+                self.dashboard.unwrap()
+            }
+        }
+    }
+
+    /// Create new insetance of Search API
+    pub fn search(mut self) -> Search {
+        match self.search {
             Some(s) => s,
             None => {
-                // Store instance for next query
-                
-                self.search = Some( Search::new(Config::get("TOKEN").unwrap(),Config::get("HOST").unwrap()));
+                let host = Config::get("GRAFANA_HOST").expect("GRAFANA_HOST not found");
+                let token = Config::get("GRAFANA_TOKEN").expect("GRAFANA_TOKEN not found");
+                self.search = Some(Search::new(host,token));
                 self.search.unwrap()
-            },
-        };
-        match search.dashboard(query) {
-            Ok(_v) => {
-                String::from("Got some results")
-            },
-            Err(e) => e.message,
+            }
         }
     }
 
     /// Search Folders
-    pub fn search_folders(mut self, query : Option<String>) -> String {
+    pub fn folders(mut self, query : Option<String>) -> String {
         let search = match self.search {
             Some(s) => s,
             None => {
@@ -82,7 +82,7 @@ impl Client {
     }
 
     /// Connect to Grafana
-    pub fn connect() -> Result<String> {
+    pub fn connect() -> Result<String,String> {
         Ok(String::from("Wow!"))
     }
 }

@@ -10,6 +10,7 @@ pub struct Api {
 }
 
 impl Api {
+    /// Create a new instance of Api
     pub fn new(host : String,token : String) -> Api {
         Api {
             token,

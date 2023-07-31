@@ -19,6 +19,7 @@ pub struct Search {
 }
 
 impl Search {
+    /// Create a new Search instance
     pub fn new(host : String, token : String) -> Search {
         let api = Api::new(token,host);
         Search {

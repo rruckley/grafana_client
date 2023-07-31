@@ -27,7 +27,7 @@ pub struct DashboardModel {
 #[derive(PartialEq,Debug)]
 pub struct Dashboard {
     /// The complete dashboard model, id = null to create a new dashboard.
-    dashboard : DashboardModel,
+    dashboard : Option<DashboardModel>,
     folder_id : Option<u16>,
     folder_uid: Option<String>,
     message : Option<String>,
@@ -35,28 +35,51 @@ pub struct Dashboard {
 }
 
 impl Dashboard {
+    /// Create a new instance of Dashboard API
+    pub fn new() -> Dashboard {
+        Dashboard { dashboard: None, folder_id: None, folder_uid: None, message: None, overwrite: false }
+    }
+
     /// Create a new dashboard in Grafana
     /// # Examples
     /// ```
     /// use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
     /// let builder = DashboardBuilder("My Dashboard").build().create("New Dashboard");
     /// ```
-    pub fn create(mut self,message : String) -> Result<DashboardModel,GrafanaError> {
-        self.message = Some(message);
-        match Dashboard::validate_for_create(self) {
-            Ok(_) => info!("Create payload ok"),
-            Err(e) => error!("Payload failed validation: {}",e),
-        } 
-        Err(GrafanaError {
-            message : "Not implemented".to_string(),
-            status : "ERROR".to_string(),
-        })
+    pub fn create(mut self,dashboard : DashboardModel) -> Dashboard {
+        self.dashboard = Some(dashboard);
+        self
     }
-    fn validate_for_create(dashboard : Dashboard) -> Result<(),String> {
-        match &dashboard.dashboard.id {
-            Some(_i) => Err("Cannot specifiy id on create".to_string()),
-            None => Ok(()),
-        }
+
+    /// Add commit message
+    pub fn with_message(mut self, message : String) -> Dashboard {
+        self.message = Some(message);
+        self
+    }
+
+    /// Set folder Id
+    pub fn with_folder_id(mut self,id : u16) -> Dashboard {
+        self.folder_id = Some(id);
+        self
+    }
+
+    /// Set folder UID
+    pub fn with_folder_uid(mut self, uid : String) -> Dashboard {
+        self.folder_uid = Some(uid);
+        self
+    }
+
+    /// Set overwrite flag
+    pub fn with_overwrite(mut self, overwrite: bool) -> Dashboard {
+        self.overwrite = overwrite;
+        self
+    }
+
+    /// Send Dashboard to Grafana
+    pub fn send(self) -> Result<Dashboard,GrafanaError> {
+        // Send current data to Grafana
+        
+        Ok(self)
     }
 }
 
@@ -139,8 +162,8 @@ impl DashboardBuilder {
     }
 
     /// Build the Dashboard
-    pub fn build(self) -> Dashboard {
-        let model = DashboardModel {
+    pub fn build(self) -> DashboardModel {
+        DashboardModel {
             id : self.id,
             uid : self.uid,
             panels : None,
@@ -149,13 +172,6 @@ impl DashboardBuilder {
             timezone : self.timezone.unwrap_or_default(),
             schema_version : self.schema_version,
             refresh : self.refresh.unwrap_or_default(),
-        };
-        Dashboard {
-            dashboard : model,
-            folder_id : Some(0),
-            folder_uid : None,
-            message : None,
-            overwrite : false,
         }
     }
 }
@@ -167,21 +183,15 @@ mod test {
     #[test]
     fn test_new_dashboard() {
         let dashboard = DashboardBuilder::new("test".to_string()).build();
-        let test_dashboard = Dashboard {
-            dashboard : DashboardModel {
-                id : None,
-                panels : None,
-                title : String::from("test"),
-                uid : None,
-                timezone : String::from(""),
-                schema_version : 0,
-                tags : None,
-                refresh : String::from(""),
-            },
-            overwrite : false,
-            folder_id  : Some(0),
-            folder_uid : None,
-            message : None,
+        let test_dashboard = DashboardModel {        
+            id : None,
+            panels : None,
+            title : String::from("test"),
+            uid : None,
+            timezone : String::from(""),
+            schema_version : 0,
+            tags : None,
+            refresh : String::from(""),
         };
         assert_eq!(dashboard,test_dashboard);
     }
@@ -190,21 +200,15 @@ mod test {
         let dashboard = DashboardBuilder::new("test".to_string())
             .schema_version(1)
             .build();
-        let test_dashboard = Dashboard {
-            dashboard : DashboardModel {
-                id : None,
-                panels : None,
-                title : String::from("test"),
-                uid : None,
-                timezone : String::from(""),
-                schema_version : 1,
-                tags : None,
-                refresh : String::from(""),
-            },
-            overwrite : false,
-            folder_id  : Some(0),
-            folder_uid : None,
-            message : None,
+        let test_dashboard = DashboardModel {
+            id : None,
+            panels : None,
+            title : String::from("test"),
+            uid : None,
+            timezone : String::from(""),
+            schema_version : 1,
+            tags : None,
+            refresh : String::from(""),
         };
         assert_eq!(dashboard,test_dashboard);
     }
