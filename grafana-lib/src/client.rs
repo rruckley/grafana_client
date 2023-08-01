@@ -6,6 +6,7 @@ use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
+use crate::community::data_source::DataSource;
 use crate::community::search::Search;
 
 use crate::common::config::Config;
@@ -29,6 +30,8 @@ pub struct Client {
     dashboard : Option<Dashboard>,
     /// Search API
     search : Option<Search>,
+    /// Data Source API
+    data_source: Option<DataSource>,
 }
 
 impl Client {
@@ -44,6 +47,7 @@ impl Client {
             authentication : Authentication {  },
             dashboard : None,
             search : None,
+            data_source : None,
         }
     }
 
@@ -54,6 +58,23 @@ impl Client {
             None => {
                 self.dashboard = Some(Dashboard::new());
                 self.dashboard.unwrap()
+            }
+        }
+    }
+
+    /// Access instance of DataSource API
+    /// # Example
+    /// ```
+    /// # use grafana_lib::client::Client;
+    /// # let client = Client::new(String::from("http://localhost:3000"));
+    /// let ds = client.data_source();
+    /// ```
+    pub fn data_source(mut self) -> DataSource {
+        match self.data_source {
+            Some(ds) => ds,
+            None => {
+                self.data_source = Some(DataSource::new());
+                self.data_source.unwrap()
             }
         }
     }
