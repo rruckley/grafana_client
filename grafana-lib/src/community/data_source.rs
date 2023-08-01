@@ -7,13 +7,103 @@
 //!
 //! The uid can have a maximum length of 40 characters.
 use log::debug;
+
+/// Data Source Model
+pub struct DataSourceModel {
+    name    : String,
+    r#type    : Option<String>,
+    url     : Option<String>,
+    basic_auth : bool,
+}
+
+pub struct DataSourceBuilder {
+    name    : String,
+    r#type  : Option<String>,
+    url     : Option<String>,
+    basic_auth : bool,
+}
+
+impl DataSourceBuilder {
+    pub fn new(name : String) -> DataSourceBuilder {
+        DataSourceBuilder { 
+            name,
+            r#type : None,
+            url     : None,
+            basic_auth : false, 
+        }
+    }
+    /// Add URL to DataSource
+    /// # Example
+    /// ```
+    /// # use grafana_lib::community::data_source::DataSourceBuilder;
+    /// let datasource = DataSourceBuilder::new(String::from("MyDataSource"))
+    ///     .with_url(String::from("http://somedata.com"))
+    ///     .build();
+    /// ```
+    pub fn with_url(mut self, url : String) -> DataSourceBuilder {
+        self.url = Some(url);
+        self
+    }
+
+    /// Build a Data Source Model
+    /// # Example
+    /// ```
+    /// # use grafana_lib::community::data_source::DataSourceBuilder;
+    /// let model = DataSourceBuilder::new(String::from("MyDataSource"))
+    ///     .build();
+    /// ```
+    pub fn build(self) -> DataSourceModel {
+        DataSourceModel {
+            name : self.name,
+            r#type : self.r#type,
+            url : self.url,
+            basic_auth : self.basic_auth,
+        }
+    }
+}
+
 /// Data Source Structure
 pub struct DataSource {}
 
 impl DataSource {
-    /// Create a new dashboard
-    pub fn create(body : String) -> Result<(),String> {
-        debug!("BODY: {}",body);
-        Err("Not implemented".to_string())
-    } 
+    /// Create new DataSource API instance
+    /// # Example
+    /// ```
+    /// # use grafana_lib::community::data_source::DataSource;
+    /// let datasource = DataSource::new();
+    /// ```
+    pub fn new() -> DataSource {
+        DataSource {}
+    }
+    /// Create a new dashboard, can fail if there is a conflict in the data, e.g. folder_id vs folder_uid
+    /// # Example
+    /// ```
+    /// # use grafana_lib::community::data_source::{DataSource,DataSourceBuilder};
+    /// # let datasource = DataSource::new();
+    /// let model = DataSourceBuilder::new(String::from("MyDataSource"))
+    ///     .build();
+    /// let result = datasource
+    ///     .create(model);
+    /// ```
+    pub fn create(self, model : DataSourceModel) -> Result<DataSource,String> {
+       
+        Ok(self)
+    }
+
+    /// Send new Data Source to Grafana
+    /// # Example 
+    /// ```
+    /// # use grafana_lib::community::data_source::{DataSource,DataSourceBuilder};
+    /// # let datasource = DataSource::new();
+    /// let model = DataSourceBuilder::new(String::from("MyDataSource"))
+    ///     .build();
+    /// let result = datasource
+    ///     .create(model)
+    ///     .expect("Could not create Dashboard instance")
+    ///     .send();
+    /// ```
+    pub fn send(&self) -> Result<String,String> {
+        // Send data source to Grafana
+        Err(String::from("datasource.send() - Not implemented"))
+    }
 }
