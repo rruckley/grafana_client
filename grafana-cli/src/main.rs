@@ -1,7 +1,7 @@
 //! Grafana CLI using the Grafana LIB crate
 //! 
 //! 
-use grafana_lib::{client::Client, community::dashboard::{Dashboard, DashboardBuilder}};
+use grafana_lib::{client::Client, community::dashboard::DashboardBuilder};
 use clap::{Parser,Subcommand};
 use log::{info,error};
 
@@ -73,7 +73,7 @@ fn main() {
                 let results = client.search().folder(None);
                 match results {
                     Ok(r) => {
-                        r.into_iter().for_each(|fr| {
+                        r.into_iter().for_each(|_fr| {
                             output.push_str("test")
                         })
                     },

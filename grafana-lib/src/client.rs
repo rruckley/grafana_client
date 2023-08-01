@@ -47,6 +47,7 @@ impl Client {
         }
     }
 
+    /// Return an instance of Dashboard API
     pub fn dashboard(mut self) -> Dashboard {
         match self.dashboard {
             Some(d) => d,

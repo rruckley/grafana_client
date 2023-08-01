@@ -43,8 +43,14 @@ impl Dashboard {
     /// Create a new dashboard in Grafana
     /// # Examples
     /// ```
-    /// use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
-    /// let builder = DashboardBuilder("My Dashboard").build().create("New Dashboard");
+    /// # use grafana_lib::community::dashboard::{Dashboard,DashboardBuilder,PanelBuilder};
+    /// # let dashboard = Dashboard::new();
+    /// let model = DashboardBuilder::new(String::from("My Dashboard"))
+    ///     .build();
+    /// dashboard
+    ///     .create(model)
+    ///     .with_message(String::from("My New Dashboard"))
+    ///     .send();
     /// ```
     pub fn create(mut self,dashboard : DashboardModel) -> Dashboard {
         self.dashboard = Some(dashboard);
@@ -149,14 +155,22 @@ impl DashboardBuilder {
     /// Add panel models
     /// # Examples
     /// ```
-    /// use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
-    /// let some_panels = vec![PanelBuilder::new(String::from("my panel")).build()];
-    /// let dashboard = DashboardBuilder("My Dashboard")
-    ///     .panels(some_panels)
-    ///     .build()
-    ///     .create("New Dashboard");
+    /// # use grafana_lib::community::dashboard::{DashboardBuilder,PanelBuilder};
+    /// # use grafana_lib::client::Client;
+    /// # let client = Client::new(String::from("http://localhost:3000"));
+    /// let panel = PanelBuilder::new(String::from("MyPanel"))
+    ///     .build();
+    /// let panel_vec = vec![panel];
+    /// let model = DashboardBuilder::new(String::from("MyDashboard"))
+    ///     .with_panels(panel_vec)
+    ///     .build();
+    /// let _output = client.dashboard()
+    /// .create(model)
+    /// .with_message(String::from("New Dashboard via CLI"))
+    /// .with_folder_id(6)
+    /// .send();
     /// ```
-    pub fn panels(mut self, panels : Vec<PanelModel>) -> DashboardBuilder {
+    pub fn with_panels(mut self, panels : Vec<PanelModel>) -> DashboardBuilder {
         self.panels = Some(panels);
         self
     }
