@@ -23,7 +23,7 @@ pub struct Client {
     /// Annoations API
     pub annotations : Annotations,
     /// Alert Provsioning API
-    pub alerting_provisioning : AlertingProvisioning,
+    alerting_provisioning : Option<AlertingProvisioning>,
     /// Authentication API
     pub authentication : Authentication,
     /// Dashboard API
@@ -36,6 +36,11 @@ pub struct Client {
 
 impl Client {
     /// Create a new client instance
+    /// # Example
+    /// ```
+    /// # use grafana_lib::client::Client;
+    /// let client = Client::new(String::from("http://localhost:3000/"));
+    /// ```
     pub fn new(url : String) -> Client {
         let api = Api::new(url.clone(),Config::get("TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
         Client {
@@ -43,11 +48,28 @@ impl Client {
             config : Config::new(url),
             admin : Admin {},
             annotations : Annotations {  },
-            alerting_provisioning : AlertingProvisioning {  },
+            alerting_provisioning : None,
             authentication : Authentication {  },
             dashboard : None,
             search : None,
             data_source : None,
+        }
+    }
+
+    /// Create new instance of Alert Provisioning API
+    /// # Example
+    /// ```
+    /// # use grafana_lib::client::Client;
+    /// # let client = Client::new(String::from("http://localhost:3000/"));
+    /// let ap = client.alerting_provisioning();
+    /// ```
+    pub fn alerting_provisioning(mut self) -> AlertingProvisioning {
+        match self.alerting_provisioning {
+            Some(ap) => ap,
+            None    => {
+                self.alerting_provisioning = Some(AlertingProvisioning {});
+                self.alerting_provisioning.unwrap()
+            }
         }
     }
 
@@ -79,7 +101,7 @@ impl Client {
         }
     }
 
-    /// Create new insetance of Search API
+    /// Create new instance of Search API
     pub fn search(mut self) -> Search {
         match self.search {
             Some(s) => s,
@@ -90,28 +112,5 @@ impl Client {
                 self.search.unwrap()
             }
         }
-    }
-
-    /// Search Folders
-    pub fn folders(mut self, query : Option<String>) -> String {
-        let search = match self.search {
-            Some(s) => s,
-            None => {
-                // Store instance for next query
-                self.search = Some( Search::new(Config::get("TOKEN").unwrap(),Config::get("HOST").unwrap()));
-                self.search.unwrap()
-            },
-        };
-        match search.folder(query) {
-            Ok(_v) => {
-                String::from("Got some results")
-            },
-            Err(e) => e.message,
-        }
-    }
-
-    /// Connect to Grafana
-    pub fn connect() -> Result<String,String> {
-        Ok(String::from("Wow!"))
     }
 }
