@@ -165,10 +165,10 @@ impl DashboardBuilder {
     ///     .with_panels(panel_vec)
     ///     .build();
     /// let _output = client.dashboard()
-    /// .create(model)
-    /// .with_message(String::from("New Dashboard via CLI"))
-    /// .with_folder_id(6)
-    /// .send();
+    ///     .create(model)
+    ///     .with_message(String::from("New Dashboard via CLI"))
+    ///     .with_folder_id(6)
+    ///     .send();
     /// ```
     pub fn with_panels(mut self, panels : Vec<PanelModel>) -> DashboardBuilder {
         self.panels = Some(panels);
@@ -176,6 +176,13 @@ impl DashboardBuilder {
     }
 
     /// Build the Dashboard
+    /// # Examples
+    /// ```
+    /// # use grafana_lib::community::dashboard::DashboardBuilder;
+    /// # use grafana_lib::client::Client;
+    /// let model = DashboardBuilder::new(String::from("MyDashboard"))
+    ///     .build();
+    /// ```
     pub fn build(self) -> DashboardModel {
         DashboardModel {
             id : self.id,
