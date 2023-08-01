@@ -1,7 +1,7 @@
 //! Grafana CLI using the Grafana LIB crate
 //! 
 //! 
-use grafana_lib::{client::Client, community::dashboard::DashboardBuilder};
+use grafana_lib::{client::Client, community::dashboard::DashboardBuilder, community::data_source::DataSourceBuilder};
 use clap::{Parser,Subcommand};
 use log::{info,error};
 
@@ -26,11 +26,26 @@ pub enum Commands {
     Folder {
         #[arg(short, long)]
         list: bool,
+    },
+    DataSource {
+        #[command(subcommand)]
+        cmd : DataSourceCommands,
     }
 }
 
 #[derive(Subcommand,Debug)]
 pub enum DashboardCommands {
+    Create {
+        #[arg(short, long)]
+        name : String,
+    },
+    List {
+
+    }
+}
+
+#[derive(Subcommand,Debug)]
+pub enum DataSourceCommands {
     Create {
         #[arg(short, long)]
         name : String,
@@ -84,6 +99,21 @@ fn main() {
                 println!("Folder results: {}",output);
             }
         },
+        Some(Commands::DataSource { cmd }) => {
+            info!("Executing Datasource commands");
+            match cmd {
+                DataSourceCommands::Create { name } => {
+                    let model = DataSourceBuilder::new(name)
+                        .build();
+                    let _result = client
+                        .data_source()
+                        .create(model);
+                },
+                DataSourceCommands::List {  } => {
+
+                },
+            }
+        }
         None => {},
     }
 }
