@@ -34,7 +34,7 @@ pub struct Client {
 impl Client {
     /// Create a new client instance
     pub fn new(url : String) -> Client {
-        let api = Api::new(url.clone(),Config::get("TOKEN").unwrap());
+        let api = Api::new(url.clone(),Config::get("TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
         Client {
             api,
             config : Config::new(url),
