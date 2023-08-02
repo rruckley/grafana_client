@@ -67,7 +67,7 @@ impl Client {
         match self.alerting_provisioning {
             Some(ap) => ap,
             None    => {
-                self.alerting_provisioning = Some(AlertingProvisioning {});
+                self.alerting_provisioning = Some(AlertingProvisioning::new());
                 self.alerting_provisioning.unwrap()
             }
         }
