@@ -6,7 +6,7 @@
 //! The unique identifier (uid) of a dashboard can be used for uniquely identify a dashboard between multiple Grafana installs. It’s automatically generated if not provided when creating a dashboard. The uid allows having consistent URLs for accessing dashboards and when syncing dashboards between multiple Grafana installs, see dashboard provisioning for more information. This means that changing the title of a dashboard will not break any bookmarked links to that dashboard.
 //!
 //! The uid can have a maximum length of 40 characters.
-use log::debug;
+//use log::debug;
 
 /// Data Source Model
 pub struct DataSourceModel {
@@ -16,6 +16,7 @@ pub struct DataSourceModel {
     basic_auth : bool,
 }
 
+/// Builder for Data Source Model
 pub struct DataSourceBuilder {
     name    : String,
     r#type  : Option<String>,
@@ -24,6 +25,7 @@ pub struct DataSourceBuilder {
 }
 
 impl DataSourceBuilder {
+    /// Create new instance of Data Source Builder
     pub fn new(name : String) -> DataSourceBuilder {
         DataSourceBuilder { 
             name,
