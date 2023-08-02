@@ -1,7 +1,6 @@
 //! Dashboard Module
 //! 
 use crate::common::error::GrafanaError;
-use log::{info,error};
 
 /// Panel Model
 #[derive(PartialEq,Debug)]
