@@ -65,7 +65,9 @@ impl DataSourceBuilder {
 }
 
 /// Data Source Structure
-pub struct DataSource {}
+pub struct DataSource {
+    model : Option<DataSourceModel>,
+}
 
 impl DataSource {
     /// Create new DataSource API instance
@@ -75,7 +77,7 @@ impl DataSource {
     /// let datasource = DataSource::new();
     /// ```
     pub fn new() -> DataSource {
-        DataSource {}
+        DataSource { model : None}
     }
     /// Create a new dashboard, can fail if there is a conflict in the data, e.g. folder_id vs folder_uid
     /// # Example
@@ -87,8 +89,8 @@ impl DataSource {
     /// let result = datasource
     ///     .create(model);
     /// ```
-    pub fn create(self, model : DataSourceModel) -> Result<DataSource,String> {
-       
+    pub fn create(mut self, model : DataSourceModel) -> Result<DataSource,String> {
+        self.model = Some(model);
         Ok(self)
     }
 
