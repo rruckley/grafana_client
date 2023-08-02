@@ -35,6 +35,8 @@ impl Search {
 
     /// Folder Search using query string
     pub fn folder(&self, query : Option<String>) -> Result<Vec<FolderResult>,GrafanaError> {
+        let url = format!("{}?{}",self.api.host,query.unwrap());
+        let json = self.api.get(url);
         Err(GrafanaError { message: String::from("Folder Search: Not implemented"), status: String::from("-1") })
     }
 }
