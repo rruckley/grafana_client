@@ -30,6 +30,10 @@ pub enum Commands {
     DataSource {
         #[command(subcommand)]
         cmd : DataSourceCommands,
+    },
+    Organization {
+        #[command(subcommand)]
+        cmd : OrganizationCommands,
     }
 }
 
@@ -53,6 +57,14 @@ pub enum DataSourceCommands {
     List {
 
     }
+}
+
+#[derive(Subcommand,Debug)]
+pub enum OrganizationCommands {
+    Create {
+        #[arg(short, long)]
+        name : String,
+    },
 }
 
 fn main() {
@@ -112,6 +124,17 @@ fn main() {
                 DataSourceCommands::List {  } => {
 
                 },
+            }
+        },
+        Some(Commands::Organization { cmd }) => {
+            info!("Executing Organization commands");
+            match cmd {
+                OrganizationCommands::Create { name } => {
+                    let _result = client
+                        .organization()
+                        .create(name)
+                        .send();
+                }
             }
         }
         None => {},
