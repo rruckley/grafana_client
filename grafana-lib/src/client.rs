@@ -7,6 +7,7 @@ use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
 use crate::community::data_source::DataSource;
+use crate::community::organization::Organization;
 use crate::community::search::Search;
 
 use crate::common::config::Config;
@@ -32,6 +33,8 @@ pub struct Client {
     search : Option<Search>,
     /// Data Source API
     data_source: Option<DataSource>,
+    /// Organization API
+    organization : Option<Organization>,
 }
 
 impl Client {
@@ -53,6 +56,7 @@ impl Client {
             dashboard : None,
             search : None,
             data_source : None,
+            organization : None,
         }
     }
 
@@ -97,6 +101,17 @@ impl Client {
             None => {
                 self.data_source = Some(DataSource::new());
                 self.data_source.unwrap()
+            }
+        }
+    }
+
+    /// Create new instance of Organization API
+    pub fn organization(mut self) -> Organization {
+        match self.organization {
+            Some(o) => o,
+            None =>  {
+                self.organization = Some(Organization::new());
+                self.organization.unwrap()
             }
         }
     }
