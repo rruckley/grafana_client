@@ -35,8 +35,8 @@ impl Search {
     /// Search dashboards according to query string
     pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
         let url = match query {
-            Some(q) => format!("{}/{}?type={}&query={}",self.api.host,SEARCH_PATH,SEARCH_DASHBOARD,q),
-            None    => format!("{}/{}?type={}",self.api.host,SEARCH_PATH,SEARCH_DASHBOARD),
+            Some(q) => format!("{}?type={}&query={}",SEARCH_PATH,SEARCH_DASHBOARD,q),
+            None    => format!("{}?type={}",SEARCH_PATH,SEARCH_DASHBOARD),
         };
         debug!("URL: {url}");
         let _json = self.api.get(url);
@@ -46,8 +46,8 @@ impl Search {
     /// Folder Search using query string
     pub fn folder(&self, query : Option<String>) -> Result<Vec<FolderResult>,GrafanaError> {
         let url = match query {
-            Some(q) => format!("{}/{}?type={}&query={}",self.api.host,SEARCH_PATH,SEARCH_FOLDER,q),
-            None    => format!("{}/{}?type={}",self.api.host,SEARCH_PATH,SEARCH_FOLDER),
+            Some(q) => format!("{}?type={}&query={}",SEARCH_PATH,SEARCH_FOLDER,q),
+            None    => format!("{}?type={}",SEARCH_PATH,SEARCH_FOLDER),
         };
         debug!("URL: {url}");
         let _json = self.api.get(url);
