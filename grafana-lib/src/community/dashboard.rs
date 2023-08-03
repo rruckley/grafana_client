@@ -1,24 +1,26 @@
 //! Dashboard Module
 //! 
 use crate::common::error::GrafanaError;
+use serde::Deserialize;
 
 /// Panel Model
-#[derive(PartialEq,Debug)]
+#[derive(PartialEq,Debug,Deserialize)]
 pub struct PanelModel {
     title   : String,
 }
 
 /// Complete Dashboard Model
-#[derive(PartialEq,Debug)]
+#[derive(PartialEq,Debug,Deserialize)]
 pub struct DashboardModel {
-    id : Option<String>,
+    id : Option<u32>,
     uid : Option<String>,
     panels : Option<Vec<PanelModel>>,
-    title : String,
+    /// Title of dashboard
+    pub title : String,
     tags : Option<Vec<String>>,
-    timezone : String,
-    schema_version : u16,
-    refresh : String,
+    timezone : Option<String>,
+    schema_version : Option<u16>,
+    refresh : Option<String>,
 }
 
 
@@ -107,7 +109,7 @@ impl PanelBuilder {
 /// Builder for Dashboard
 #[derive(PartialEq,Debug)]
 pub struct DashboardBuilder {
-    id : Option<String>,
+    id : Option<u32>,
     uid : Option<String>,
     panels : Option<Vec<PanelModel>>,
     title : String,
@@ -189,9 +191,9 @@ impl DashboardBuilder {
             panels : None,
             title : self.title,
             tags : None,
-            timezone : self.timezone.unwrap_or_default(),
-            schema_version : self.schema_version,
-            refresh : self.refresh.unwrap_or_default(),
+            timezone : self.timezone,
+            schema_version : Some(self.schema_version),
+            refresh : self.refresh,
         }
     }
 }
@@ -208,10 +210,10 @@ mod test {
             panels : None,
             title : String::from("test"),
             uid : None,
-            timezone : String::from(""),
-            schema_version : 0,
+            timezone : None,
+            schema_version : Some(0),
             tags : None,
-            refresh : String::from(""),
+            refresh : None,
         };
         assert_eq!(dashboard,test_dashboard);
     }
@@ -225,10 +227,10 @@ mod test {
             panels : None,
             title : String::from("test"),
             uid : None,
-            timezone : String::from(""),
-            schema_version : 1,
+            timezone : None,
+            schema_version : Some(1),
             tags : None,
-            refresh : String::from(""),
+            refresh : None,
         };
         assert_eq!(dashboard,test_dashboard);
     }
