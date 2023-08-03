@@ -15,7 +15,7 @@ impl Api {
     pub fn new(host : String,token : String) -> Api {
         Api {
             token,
-            host,
+            host : format!("{}/api",host),
         }
     }
     /// Perform GET operation against Grafana
