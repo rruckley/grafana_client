@@ -1,9 +1,11 @@
 //! Folder Module
 //! 
 use log::info;
+use serde::Deserialize;
 
 /// Data model for a folder
-#[derive(Debug,Default)]
+#[derive(Debug,Default,Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct FolderModel {
     /// Numerical Id
     pub id      : u32,
