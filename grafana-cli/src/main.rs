@@ -10,7 +10,8 @@ use clap::{Parser,Subcommand};
 use log::{info,error};
 
 #[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version)]
+#[command(about = "Grafana CLI using the Grafana interface crate")]
 struct Args {
     /// Optional host, overrides GRAFANA_HOST environment 
     #[arg(long)]
@@ -114,7 +115,7 @@ fn main() {
             info!("Executing Folder API");
             match cmd {
                 FolderCommands::Create { name } => {
-                    let model = FolderModel { name };
+                    let model = FolderModel::new(name);
                     let _result = client.folder().create(model);
                 }
                 FolderCommands::List { query } => {
