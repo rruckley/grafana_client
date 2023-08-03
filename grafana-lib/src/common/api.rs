@@ -3,7 +3,7 @@
 
 use serde::Serialize;
 
-use log::debug;
+use log::{info,debug,error};
 
 /// Low level API functions
 pub struct Api {
@@ -25,9 +25,11 @@ impl Api {
         let url = format!("{}/{}",self.host, path);
         match reqwest::blocking::get(url) {
             Ok(r) => {
-                Ok(r.json().unwrap())
+                info!("GET responded");
+                Ok(r.text().unwrap())
             },
             Err(e) => {
+                error!("GET Failed: {}",e.to_string());
                 Err(e.to_string())
             }
         }
