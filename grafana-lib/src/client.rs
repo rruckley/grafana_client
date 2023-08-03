@@ -103,7 +103,9 @@ impl Client {
         match self.data_source {
             Some(ds) => ds,
             None => {
-                self.data_source = Some(DataSource::new());
+                let host = Config::get("GRAFANA_HOST").expect("GRAFANA_HOST not found");
+                let token = Config::get("GRAFANA_TOKEN").expect("GRAFANA_TOKEN not found");
+                self.data_source = Some(DataSource::new(host,token));
                 self.data_source.unwrap()
             }
         }
