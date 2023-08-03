@@ -3,6 +3,7 @@
 use crate::common::error::GrafanaError;
 use crate::common::api::Api;
 use crate::community::folder::FolderModel;
+use crate::community::dashboard::DashboardModel;
 
 use log::debug;
 
@@ -34,14 +35,18 @@ impl Search {
         }
     }
     /// Search dashboards according to query string
-    pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardResult>,GrafanaError> {
+    pub fn dashboard(&self, query : Option<String>) -> Result<Vec<DashboardModel>,GrafanaError> {
         let url = match query {
             Some(q) => format!("{}?type={}&query={}",SEARCH_PATH,SEARCH_DASHBOARD,q),
             None    => format!("{}?type={}",SEARCH_PATH,SEARCH_DASHBOARD),
         };
         debug!("URL: {url}");
-        let _json = self.api.get(url);
-        Err(GrafanaError { message: String::from("Dashboard Search: Not implemented"), status: String::from("-1") })
+        let body = self.api.get(url).unwrap();
+        let result = serde_json::from_str(body.as_str());
+        match result {
+            Ok(r) => Ok(r),
+            Err(e) => Err(GrafanaError { message: String::from(e.to_string()), status: String::from("-1") })
+        }
     }
 
     /// Folder Search using query string
