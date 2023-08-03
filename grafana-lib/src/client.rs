@@ -7,6 +7,7 @@ use crate::community::alerting_provisioning::AlertingProvisioning;
 use crate::community::authentication::Authentication;
 use crate::community::dashboard::Dashboard;
 use crate::community::data_source::DataSource;
+use crate::community::folder::Folder;
 use crate::community::organization::Organization;
 use crate::community::search::Search;
 
@@ -27,6 +28,8 @@ pub struct Client {
     alerting_provisioning : Option<AlertingProvisioning>,
     /// Authentication API
     pub authentication : Authentication,
+    /// Folder API
+    folder : Option<Folder>,
     /// Dashboard API
     dashboard : Option<Dashboard>,
     /// Search API
@@ -54,6 +57,7 @@ impl Client {
             alerting_provisioning : None,
             authentication : Authentication {  },
             dashboard : None,
+            folder : None,
             search : None,
             data_source : None,
             organization : None,
@@ -101,6 +105,17 @@ impl Client {
             None => {
                 self.data_source = Some(DataSource::new());
                 self.data_source.unwrap()
+            }
+        }
+    }
+
+    /// Create new instance of Folder API
+    pub fn folder(mut self) -> Folder {
+        match self.folder {
+            Some(f) => f,
+            None => {
+                self.folder = Some(Folder::new());
+                self.folder.unwrap()
             }
         }
     }
