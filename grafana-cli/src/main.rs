@@ -1,7 +1,11 @@
 //! Grafana CLI using the Grafana LIB crate
 //! 
 //! 
-use grafana_lib::{client::Client, community::dashboard::DashboardBuilder, community::data_source::DataSourceBuilder};
+use grafana_lib::{client::Client, 
+    community::dashboard::DashboardBuilder, 
+    community::data_source::DataSourceBuilder,
+    community::folder::FolderModel,
+};
 use clap::{Parser,Subcommand};
 use log::{info,error};
 
@@ -23,13 +27,13 @@ pub enum Commands {
         #[command(subcommand)]
         cmd : DashboardCommands,
     },
-    Folder {
-        #[arg(short, long)]
-        list: bool,
-    },
     DataSource {
         #[command(subcommand)]
         cmd : DataSourceCommands,
+    },
+    Folder {
+        #[command(subcommand)]
+        cmd : FolderCommands,
     },
     Organization {
         #[command(subcommand)]
@@ -44,7 +48,8 @@ pub enum DashboardCommands {
         name : String,
     },
     List {
-
+        #[arg(short, long)]
+        query : Option<String>,
     }
 }
 
@@ -56,6 +61,18 @@ pub enum DataSourceCommands {
     },
     List {
 
+    }
+}
+
+#[derive(Subcommand,Debug)]
+pub enum FolderCommands {
+    Create {
+        #[arg(short, long)]
+        name : String,
+    },
+    List {
+        #[arg(short, long)]
+        query : Option<String>
     }
 }
 
@@ -87,28 +104,34 @@ fn main() {
                         .with_folder_id(6)
                         .send();
                 },
-                List => {
-                    info!("Listing dashboards");
-                    let _output = client.search().dashboard(None);
-                },
+                DashboardCommands::List { query } => {
+                    info!("Searching dashboards");
+                    let _result = client.search().dashboard(query);
+                }
             }
         },
-        Some(Commands::Folder { list }) => {
-            info!("Executing Folder Search");
-            if list {
-                let mut output = String::from("");
-                let results = client.search().folder(None);
-                match results {
-                    Ok(r) => {
-                        r.into_iter().for_each(|_fr| {
-                            output.push_str("test")
-                        })
-                    },
-                    Err(e) => {
-                        error!("Folder Search: error {}",e.message);
-                    },
+        Some(Commands::Folder { cmd }) => {
+            info!("Executing Folder API");
+            match cmd {
+                FolderCommands::Create { name } => {
+                    let model = FolderModel { name };
+                    let _result = client.folder().create(model);
                 }
-                println!("Folder results: {}",output);
+                FolderCommands::List { query } => {
+                    let mut output = String::from("");
+                    let results = client.search().folder(query);
+                    match results {
+                        Ok(r) => {
+                            r.into_iter().for_each(|_fr| {
+                                output.push_str("test")
+                            })
+                        },
+                        Err(e) => {
+                            error!("Folder Search: error {}",e.message);
+                        },
+                    }
+                    println!("Folder results: {}",output);
+                }
             }
         },
         Some(Commands::DataSource { cmd }) => {
@@ -130,10 +153,13 @@ fn main() {
             info!("Executing Organization commands");
             match cmd {
                 OrganizationCommands::Create { name } => {
-                    let _result = client
+                    match client
                         .organization()
                         .create(name)
-                        .send();
+                        .send() {
+                            Ok(r) => info!("Org created!: {r}"),
+                            Err(e) => error!("Could not create org: {e}"),
+                        }
                 }
             }
         }
