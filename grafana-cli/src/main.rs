@@ -164,7 +164,23 @@ fn main() {
                         .create(model);
                 },
                 DataSourceCommands::List {  } => {
-
+                    let result = client
+                        .data_source()
+                        .get(None);
+                    match result {
+                        Ok(r) => {
+                            // Parse resulting vector
+                            let mut output = String::from(format!("{} Results.\n",r.len()));
+                            r.into_iter().for_each(|ds| {
+                                output.push_str(&ds.name);
+                                output.push_str("\n");    
+                            });
+                            println!("Folders: {}",output);
+                        },
+                        Err(e) => {
+                            error!("List failed: {}",e.to_string())
+                        }
+                    } 
                 },
             }
         },
