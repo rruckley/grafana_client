@@ -17,7 +17,7 @@ impl Organization {
         Organization { 
             name : None,
             user : None,
-            pass : None, 
+            pass : None,
         }
     }
     /// Create a new organisation model
