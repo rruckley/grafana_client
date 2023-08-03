@@ -6,6 +6,7 @@ use serde::Serialize;
 use log::{info,debug,error};
 
 /// Low level API functions
+#[derive(Debug,Default)]
 pub struct Api {
     token   : String,
     /// Hostname for Grafana
