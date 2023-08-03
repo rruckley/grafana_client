@@ -107,7 +107,22 @@ fn main() {
                 },
                 DashboardCommands::List { query } => {
                     info!("Searching dashboards");
-                    let _result = client.search().dashboard(query);
+                    let results = client.search().dashboard(query);
+                    match results {
+                        Ok(r) => {
+                            let mut output = String::from(format!("{} results.\n",r.len()));
+                            r.into_iter().for_each(|dm| {
+                                output.push_str(&dm.title);
+                                output.push_str("\n");
+                            });
+                            println!("Dashboards: {}",output);
+                        }
+                        Err(e) => {
+                            error!("Dashboard Search: error {}",e.message);
+                        }
+                       
+                    }
+                    
                 }
             }
         },
@@ -119,19 +134,22 @@ fn main() {
                     let _result = client.folder().create(model);
                 }
                 FolderCommands::List { query } => {
-                    let mut output = String::from("");
+                    
                     let results = client.search().folder(query);
                     match results {
                         Ok(r) => {
+                            let mut output = String::from(format!("{} Results.\n",r.len()));
                             r.into_iter().for_each(|fm| {
-                                output.push_str(&fm.title)
-                            })
+                                output.push_str(&fm.title);
+                                output.push_str("\n");
+                            });
+                            println!("Folders: {}",output);
                         },
                         Err(e) => {
                             error!("Folder Search: error {}",e.message);
                         },
                     }
-                    println!("Folders: {}",output);
+                    
                 }
             }
         },
