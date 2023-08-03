@@ -12,6 +12,7 @@ pub mod dashboard_permissions;
 pub mod dashboard_versions;
 pub mod dashboard;
 pub mod data_source;
+pub mod folder;
 pub mod folder_permissions;
 pub mod library_element;
 pub mod organization;
