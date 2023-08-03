@@ -23,7 +23,7 @@ pub struct DashboardModel {
 
 
 /// Dashboard API Structure
-#[derive(PartialEq,Debug)]
+#[derive(PartialEq,Debug,Default)]
 pub struct Dashboard {
     /// The complete dashboard model, id = null to create a new dashboard.
     dashboard : Option<DashboardModel>,
