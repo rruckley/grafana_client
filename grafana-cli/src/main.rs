@@ -123,15 +123,15 @@ fn main() {
                     let results = client.search().folder(query);
                     match results {
                         Ok(r) => {
-                            r.into_iter().for_each(|_fr| {
-                                output.push_str("test")
+                            r.into_iter().for_each(|fm| {
+                                output.push_str(&fm.title)
                             })
                         },
                         Err(e) => {
                             error!("Folder Search: error {}",e.message);
                         },
                     }
-                    println!("Folder results: {}",output);
+                    println!("Folders: {}",output);
                 }
             }
         },
@@ -165,5 +165,14 @@ fn main() {
             }
         }
         None => {},
+    }
+}
+
+mod main_test {
+    #[test]
+    fn verify_cli() {
+        use super::*;
+        use clap::CommandFactory;
+        Args::command().debug_assert();
     }
 }
