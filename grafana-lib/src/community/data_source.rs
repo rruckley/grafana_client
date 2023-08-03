@@ -9,11 +9,16 @@
 //use log::debug;
 
 /// Data Source Model
+#[derive(Debug,Default)]
 pub struct DataSourceModel {
-    name    : String,
-    r#type    : Option<String>,
-    url     : Option<String>,
-    basic_auth : bool,
+    /// Data Source Name
+    pub name    : String,
+    /// Data Source Type
+    pub r#type    : Option<String>,
+    /// Data Source URL
+    pub url     : Option<String>,
+    /// Use Basic Auth?
+    pub basic_auth : bool,
 }
 
 /// Builder for Data Source Model
@@ -65,6 +70,7 @@ impl DataSourceBuilder {
 }
 
 /// Data Source Structure
+#[derive(Debug,Default)]
 pub struct DataSource {
     model : Option<DataSourceModel>,
 }

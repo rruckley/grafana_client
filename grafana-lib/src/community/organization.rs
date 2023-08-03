@@ -4,7 +4,7 @@
 
 
 /// Organization Struct
-#[derive(Debug)]
+#[derive(Debug,Default)]
 pub struct Organization {
     name : Option<String>,
     user : Option<String>,
@@ -46,7 +46,7 @@ impl Organization {
     }
     /// Send organization to Grafana
     pub fn send(&self) -> Result<String,String> {
-        if (self.user.is_none() || self.pass.is_none()) {
+        if self.user.is_none() || self.pass.is_none() {
             return Err(String::from("Basic Auth Credentials not set"));
         }
         Err(String::from("Org Create: Not implemented"))

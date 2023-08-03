@@ -2,13 +2,18 @@
 //! 
 
 /// Alert Rule Model
+#[derive(Debug,Default)]
 pub struct AlertRule {}
 /// Contact Point Model
+#[derive(Debug,Default)]
 pub struct ContactPoint {}
 /// Notification Policy Model
+#[derive(Debug,Default)]
 pub struct NotificationPolicy {}
 /// Mute Timings Model
+#[derive(Debug,Default)]
 pub struct MuteTimings {}
+#[derive(Debug,Default)]
 /// Template Model
 pub struct Template {}
 
@@ -60,6 +65,7 @@ impl AlertingProvisioningBuilder {
 }
 
 /// Alerting Provisioning Model
+#[derive(Debug,Default)]
 pub struct AlertProvisioningModel {
     /// Alert Rule
     pub alert_rule : Option<AlertRule>,
@@ -78,6 +84,7 @@ impl AlertProvisioningModel {
 }
 
 /// Alerting Provisioning Struct
+#[derive(Debug,Default)]
 pub struct AlertingProvisioning {
     model : Option<AlertProvisioningModel>,
 }
