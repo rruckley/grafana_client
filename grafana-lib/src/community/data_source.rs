@@ -7,9 +7,13 @@
 //!
 //! The uid can have a maximum length of 40 characters.
 //use log::debug;
+use crate::common::api::Api;
+use serde::Deserialize;
+
+const DATASOURCE_PATH : &str= "datasources";
 
 /// Data Source Model
-#[derive(Debug,Default)]
+#[derive(Debug,Default,Deserialize)]
 pub struct DataSourceModel {
     /// Data Source Name
     pub name    : String,
@@ -18,7 +22,7 @@ pub struct DataSourceModel {
     /// Data Source URL
     pub url     : Option<String>,
     /// Use Basic Auth?
-    pub basic_auth : bool,
+    pub basic_auth : Option<bool>,
 }
 
 /// Builder for Data Source Model
@@ -64,7 +68,7 @@ impl DataSourceBuilder {
             name : self.name,
             r#type : self.r#type,
             url : self.url,
-            basic_auth : self.basic_auth,
+            basic_auth : Some(self.basic_auth),
         }
     }
 }
@@ -72,7 +76,8 @@ impl DataSourceBuilder {
 /// Data Source Structure
 #[derive(Debug,Default)]
 pub struct DataSource {
-    model : Option<DataSourceModel>,
+    api     : Api,
+    model   : Option<DataSourceModel>,
 }
 
 impl DataSource {
@@ -82,8 +87,26 @@ impl DataSource {
     /// # use grafana_lib::community::data_source::DataSource;
     /// let datasource = DataSource::new();
     /// ```
-    pub fn new() -> DataSource {
-        DataSource { model : None}
+    pub fn new(host : String, token : String) -> DataSource {
+        let api = Api::new(host,token);
+        DataSource { 
+            api,
+            model : None
+        }
+    }
+
+    /// List data sources
+    pub fn get(&self, _name : Option<String>) -> Result<Vec<DataSourceModel>,String> {
+        let path = format!("{}",DATASOURCE_PATH);
+        let body = self.api.get(path).unwrap();
+        let result = serde_json::from_str(body.as_str()); 
+        match result {
+            Ok(r) => {
+                Ok(r)
+            },
+            Err(e) => Err(e.to_string())
+        }
+        
     }
     /// Create a new dashboard, can fail if there is a conflict in the data, e.g. folder_id vs folder_uid
     /// # Example
