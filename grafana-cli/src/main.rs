@@ -24,6 +24,10 @@ struct Args {
 // CLI commands
 #[derive(Subcommand,Debug)]
 pub enum Commands {
+    Alerting {
+        #[command(subcommand)]
+        cmd : AlertingCommands,
+    },
     Dashboard {
         #[command(subcommand)]
         cmd : DashboardCommands,
@@ -39,6 +43,25 @@ pub enum Commands {
     Organization {
         #[command(subcommand)]
         cmd : OrganizationCommands,
+    }
+}
+
+#[derive(Subcommand,Debug)]
+pub enum AlertingCommands {
+    Rules {
+        #[command(subcommand)]
+        opts : RuleOptions,
+    },    
+}
+
+#[derive(Subcommand,Debug)]
+pub enum RuleOptions {
+    List {
+
+    },
+    Create {
+        #[arg(short, long)]
+        name : String,
     }
 }
 
@@ -93,6 +116,23 @@ fn main() {
     let client = Client::new(String::from("http://localhost:3000"));
 
     match args.command {
+        Some(Commands::Alerting { cmd }) => {
+            info!("Executing Alerting");
+            match cmd {
+                AlertingCommands::Rules { opts } => {
+                    match opts {
+                        RuleOptions::Create { name } => {
+                            info!("Creating alerting rule: {name}");
+                            
+                        },
+                        RuleOptions::List {  } => {
+                            info!("Listing alerting rules");
+                            let _result = client.alerting_provisioning().alert_rule().list();
+                        },
+                    }
+                }
+            }
+        },
         Some(Commands::Dashboard { cmd }) => {
             info!("Executing Dashboard");
             match cmd {
