@@ -85,7 +85,9 @@ impl DataSource {
     /// # Example
     /// ```
     /// # use grafana_lib::community::data_source::DataSource;
-    /// let datasource = DataSource::new();
+    /// let datasource = DataSource::new(
+    ///     String::from("http://localhost:3000"),
+    ///     String::from("TOKEN"));
     /// ```
     pub fn new(host : String, token : String) -> DataSource {
         let api = Api::new(host,token);
@@ -112,7 +114,9 @@ impl DataSource {
     /// # Example
     /// ```
     /// # use grafana_lib::community::data_source::{DataSource,DataSourceBuilder};
-    /// # let datasource = DataSource::new();
+    /// # let datasource = DataSource::new(
+    ///     String::from("http://localhost:3000"),
+    ///     String::from("TOKEN"));
     /// let model = DataSourceBuilder::new(String::from("MyDataSource"))
     ///     .build();
     /// let result = datasource
@@ -127,7 +131,9 @@ impl DataSource {
     /// # Example 
     /// ```
     /// # use grafana_lib::community::data_source::{DataSource,DataSourceBuilder};
-    /// # let datasource = DataSource::new();
+    /// # let datasource = DataSource::new(
+    ///     String::from("http://localhost:3000"),
+    ///     String::from("TOKEN"));
     /// let model = DataSourceBuilder::new(String::from("MyDataSource"))
     ///     .build();
     /// let result = datasource
