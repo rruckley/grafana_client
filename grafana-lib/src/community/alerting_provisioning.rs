@@ -1,9 +1,25 @@
 //! Alerting Provisioning Module
 //! 
+use std::default::Default;
+use log::debug;
+
+const ALERT_PROVISIONING_PATH : &str = "v1/provisioning";
+const ALERT_RULES_PATH : &str = "alert-rules";
 
 /// Alert Rule Model
 #[derive(Debug,Default)]
 pub struct AlertRule {}
+
+impl AlertRule {
+    /// Generate list of Alert Rules for alerting
+    pub fn list(&self) -> Result<String,String> {
+        // Genereate API call and collect the results
+        let path = format!("{}/{}",ALERT_PROVISIONING_PATH,ALERT_RULES_PATH);
+        debug!("Fetching alert rules: {path}");
+        Err(String::from("Not implemented"))
+    }
+}
+
 /// Contact Point Model
 #[derive(Debug,Default)]
 pub struct ContactPoint {}
@@ -80,7 +96,16 @@ pub struct AlertProvisioningModel {
 }
 
 impl AlertProvisioningModel {
-
+    /// Create new instance of AlertRule model
+    pub fn alert_rule(mut self) -> AlertRule {
+        match self.alert_rule {
+            Some(ar) => ar,
+            None => {
+                self.alert_rule = Some(AlertRule::default());
+                self.alert_rule.unwrap()
+            }
+        }
+    }
 }
 
 /// Alerting Provisioning Struct
@@ -92,11 +117,16 @@ pub struct AlertingProvisioning {
 impl AlertingProvisioning {
     /// Create new instance of Alerting Provisioning API
     pub fn new() -> AlertingProvisioning {
-        AlertingProvisioning { model : None }
+        // Create default instance
+        AlertingProvisioning { model : Some(AlertProvisioningModel::default()) }
     }
     /// Create a new Alerting Provisioning
     pub fn create(mut self, alert_provisioning_model : AlertProvisioningModel) -> AlertingProvisioning {
         self.model = Some(alert_provisioning_model);
         self
+    }
+    /// Return instance of AlertRule model
+    pub fn alert_rule(self) -> AlertRule {
+        self.model.unwrap().alert_rule()
     }
 }
