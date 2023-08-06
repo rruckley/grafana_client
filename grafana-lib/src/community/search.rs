@@ -45,7 +45,7 @@ impl Search {
         let result = serde_json::from_str(body.as_str());
         match result {
             Ok(r) => Ok(r),
-            Err(e) => Err(GrafanaError { message: String::from(e.to_string()), status: String::from("-1") })
+            Err(e) => Err(GrafanaError::new(e.to_string(), String::from("-1")))
         }
     }
 
@@ -60,7 +60,7 @@ impl Search {
         let result = serde_json::from_str(body.as_str());
         match result {
             Ok(r) => Ok(r),
-            Err(e) => Err(GrafanaError { message: String::from(e.to_string()), status: String::from("-1") }),
+            Err(e) => Err(GrafanaError::new(e.to_string(), String::from("-1"))),
         }
     }
         

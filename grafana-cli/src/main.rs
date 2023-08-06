@@ -158,7 +158,7 @@ fn main() {
                             println!("Dashboards: {}",output);
                         }
                         Err(e) => {
-                            error!("Dashboard Search: error {}",e.message);
+                            error!("Dashboard Search: error {}",e);
                         }
                        
                     }
@@ -186,7 +186,7 @@ fn main() {
                             println!("Folders: {}",output);
                         },
                         Err(e) => {
-                            error!("Folder Search: error {}",e.message);
+                            error!("Folder Search: error {}",e);
                         },
                     }
                     
