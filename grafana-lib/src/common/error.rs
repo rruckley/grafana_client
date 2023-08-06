@@ -7,9 +7,21 @@ use std::error::Error;
 #[derive(Debug)]
 pub struct GrafanaError {
     /// Error Message
-    pub message : String,
+    message : String,
     /// Error Status Code
-    pub status : String,
+    status : String,
+}
+
+impl GrafanaError {
+    /// Create a new instance of GrafanaError passing in a message and status code.
+    /// # Example
+    /// ```
+    /// # use grafana_lib::common::error::GrafanaError;
+    /// let err = GrafanaError::new(String::from("A Message"), String::from("A Status"));
+    /// ```
+    pub fn new(message : String, status : String) -> GrafanaError {
+        GrafanaError { message, status }
+    }
 }
 
 impl std::fmt::Display for GrafanaError {
