@@ -1,12 +1,12 @@
 //! API Module
 //! 
 
-use serde::Serialize;
+use serde::{Serialize,Deserialize};
 
 use log::{info,debug,error};
 
 /// Low level API functions
-#[derive(Debug,Default)]
+#[derive(Debug,Default,Serialize,Deserialize)]
 pub struct Api {
     token   : String,
     /// Hostname for Grafana
@@ -26,7 +26,7 @@ impl Api {
         let url = format!("{}/{}",self.host, path);
         match reqwest::blocking::get(url) {
             Ok(r) => {
-                info!("GET responded");
+                info!("GET responded with status: {}",r.status());
                 Ok(r.text().unwrap())
             },
             Err(e) => {
