@@ -1,7 +1,11 @@
 //! Dashboard Module
 //! 
 use crate::common::error::GrafanaError;
+use crate::common::api::Api;
 use serde::Deserialize;
+
+const DASHBOARD_PATH : &str = "dashboards";
+const DASHBOARD_UID_PATH : &str = "uid";
 
 /// Panel Model
 #[derive(PartialEq,Debug,Deserialize)]
@@ -11,22 +15,40 @@ pub struct PanelModel {
 
 /// Complete Dashboard Model
 #[derive(PartialEq,Debug,Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct DashboardModel {
     id : Option<u32>,
-    uid : Option<String>,
+    /// Unique Id of Dashboard, used in other queries
+    pub uid : Option<String>,
     panels : Option<Vec<PanelModel>>,
     /// Title of dashboard
-    pub title : String,
+    pub title : Option<String>,
     tags : Option<Vec<String>>,
     timezone : Option<String>,
-    schema_version : Option<u16>,
+    /// Schema Version
+    pub schema_version : Option<u16>,
     refresh : Option<String>,
+}
+
+/// Dashboard meta-data
+#[derive(Debug,PartialEq,Default,Deserialize)]
+pub struct MetaModel {}
+
+/// Full Dashboard Model
+#[derive(Debug,PartialEq,Deserialize)]
+pub struct FullDashboardModel {
+    /// Meta-data on dashboard
+    pub meta : MetaModel,
+    /// Dashboard model
+    pub dashboard : DashboardModel,
 }
 
 
 /// Dashboard API Structure
 #[derive(PartialEq,Debug,Default)]
 pub struct Dashboard {
+    /// API interface
+    api : Api,
     /// The complete dashboard model, id = null to create a new dashboard.
     dashboard : Option<DashboardModel>,
     folder_id : Option<u16>,
@@ -37,8 +59,8 @@ pub struct Dashboard {
 
 impl Dashboard {
     /// Create a new instance of Dashboard API
-    pub fn new() -> Dashboard {
-        Dashboard { dashboard: None, folder_id: None, folder_uid: None, message: None, overwrite: false }
+    pub fn new(api : Api) -> Dashboard {
+        Dashboard { api, dashboard: None, folder_id: None, folder_uid: None, message: None, overwrite: false }
     }
 
     /// Create a new dashboard in Grafana
@@ -87,6 +109,21 @@ impl Dashboard {
         // Send current data to Grafana
         
         Ok(self)
+    }
+
+    /// Get a dashboard by UID
+    pub fn get(&self, uid : String) -> Result<FullDashboardModel,GrafanaError> {
+        let path = format!("{}/{}/{}",DASHBOARD_PATH,DASHBOARD_UID_PATH,uid);
+        match self.api.get(path) {
+            Ok(r) => {
+                let result : FullDashboardModel = serde_json::from_str(r.as_str()).unwrap();
+                Ok(result)
+            },
+            Err(e) => {
+                Err(GrafanaError::new(e,String::from("ERROR")))
+            }
+        }
+        
     }
 }
 
@@ -189,7 +226,7 @@ impl DashboardBuilder {
             id : self.id,
             uid : self.uid,
             panels : None,
-            title : self.title,
+            title : Some(self.title),
             tags : None,
             timezone : self.timezone,
             schema_version : Some(self.schema_version),
@@ -208,7 +245,7 @@ mod test {
         let test_dashboard = DashboardModel {        
             id : None,
             panels : None,
-            title : String::from("test"),
+            title : Some(String::from("test")),
             uid : None,
             timezone : None,
             schema_version : Some(0),
@@ -225,7 +262,7 @@ mod test {
         let test_dashboard = DashboardModel {
             id : None,
             panels : None,
-            title : String::from("test"),
+            title : Some(String::from("test")),
             uid : None,
             timezone : None,
             schema_version : Some(1),
