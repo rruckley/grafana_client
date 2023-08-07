@@ -99,7 +99,7 @@ impl DataSource {
 
     /// List data sources
     pub fn get(&self, _name : Option<String>) -> Result<Vec<DataSourceModel>,String> {
-        let path = format!("{}",DATASOURCE_PATH);
+        let path = DATASOURCE_PATH.to_string();
         let body = self.api.get(path).unwrap();
         let result = serde_json::from_str(body.as_str()); 
         match result {

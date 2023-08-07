@@ -73,6 +73,7 @@ pub struct MuteTimings {}
 pub struct Template {}
 
 /// Builder struct for creating an AlertingProvisioningModel
+#[derive(Default)]
 pub struct AlertingProvisioningBuilder {
     alert_rule : Option<AlertRule>,
     contact_point : Option<ContactPoint>,

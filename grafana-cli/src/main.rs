@@ -136,7 +136,7 @@ fn main() {
     env_logger::init();
 
     // Create a client to use for cli
-    let client = Client::new(String::from(Config::get("GRAFANA_HOST").unwrap()));
+    let client = Client::new(Config::get("GRAFANA_HOST").unwrap());
 
     match args.command {
         Some(Commands::Alerting { cmd }) => {
@@ -184,13 +184,13 @@ fn main() {
                     let results = client.search().dashboard(query);
                     match results {
                         Ok(r) => {
-                            let mut output = String::from(format!("{} results.\n",r.len()));
+                            let mut output = format!("{} results.\n",r.len());
                             r.into_iter().for_each(|dm| {
                                 output.push_str(&dm.title.unwrap_or("no title".to_string()));
                                 if verbose {
                                     output.push_str(format!(" [uid={}]",&dm.uid.unwrap()).as_str());
                                 }
-                                output.push_str("\n");
+                                output.push('\n');
                             });
                             println!("Dashboards: {}",output);
                         }
@@ -206,10 +206,16 @@ fn main() {
                     let results = client.dashboard().get(uid.clone());
                     match results {
                         Ok(r) => {
-                            println!("Title: {} [{}]\n",
-                                r.dashboard.title.unwrap_or_default(),
-                                r.dashboard.schema_version.unwrap_or_default()
-                            );
+                            println!("{}",r.dashboard);
+                            // Optionally display panels
+                            if true {
+                                let panels = r.dashboard.panels.unwrap();
+                                println!("Panels\t: {}",panels.len());
+                                panels.into_iter().for_each(|p| {
+                                    // Display each pane;l
+                                    print!("{}",p);
+                                })
+                            }
                         },
                         Err(e) => {
                             error!("Error getting dashboard {} : {}",uid.clone(),e);
@@ -230,10 +236,10 @@ fn main() {
                     let results = client.search().folder(query);
                     match results {
                         Ok(r) => {
-                            let mut output = String::from(format!("{} Results.\n",r.len()));
+                            let mut output = format!("{} Results.\n",r.len());
                             r.into_iter().for_each(|fm| {
                                 output.push_str(&fm.title);
-                                output.push_str("\n");
+                                output.push('\n');
                             });
                             println!("Folders: {}",output);
                         },
@@ -262,10 +268,10 @@ fn main() {
                     match result {
                         Ok(r) => {
                             // Parse resulting vector
-                            let mut output = String::from(format!("{} Results.\n",r.len()));
+                            let mut output = format!("{} Results.\n",r.len());
                             r.into_iter().for_each(|ds| {
                                 output.push_str(&ds.name);
-                                output.push_str("\n");    
+                                output.push('\n');    
                             });
                             println!("Folders: {}",output);
                         },
