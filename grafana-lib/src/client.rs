@@ -86,7 +86,7 @@ impl Client {
         match self.dashboard {
             Some(d) => d,
             None => {
-                self.dashboard = Some(Dashboard::new());
+                self.dashboard = Some(Dashboard::new(self.api));
                 self.dashboard.unwrap()
             }
         }
