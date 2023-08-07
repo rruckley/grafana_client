@@ -1,10 +1,12 @@
 //! Grafana CLI using the Grafana LIB crate
 //! 
 //! 
-use grafana_lib::{client::Client, 
+use grafana_lib::{
+    client::Client, 
     community::dashboard::DashboardBuilder, 
     community::data_source::DataSourceBuilder,
     community::folder::FolderModel,
+    common::config::Config,
 };
 use clap::{Parser,Subcommand};
 use log::{info,error};
@@ -51,7 +53,22 @@ pub enum AlertingCommands {
     Rules {
         #[command(subcommand)]
         opts : RuleOptions,
-    },    
+    },   
+    ContactPoints {
+        #[command(subcommand)]
+        opts : ContactOptions,
+    } 
+}
+
+#[derive(Subcommand,Debug)]
+pub enum ContactOptions {
+    List {
+
+    },
+    Create {
+        #[arg(short,long)]
+        name : String,
+    }
 }
 
 #[derive(Subcommand,Debug)]
@@ -113,7 +130,7 @@ fn main() {
     env_logger::init();
 
     // Create a client to use for cli
-    let client = Client::new(String::from("http://localhost:3000"));
+    let client = Client::new(String::from(Config::get("GRAFANA_HOST").unwrap()));
 
     match args.command {
         Some(Commands::Alerting { cmd }) => {
@@ -128,6 +145,17 @@ fn main() {
                         RuleOptions::List {  } => {
                             info!("Listing alerting rules");
                             let _result = client.alerting_provisioning().alert_rule().list();
+                        },
+                    }
+                },
+                AlertingCommands::ContactPoints { opts } => {
+                    match opts {
+                        ContactOptions::Create { name } => {
+                            info!("Creating contact point: {name}");
+                        },
+                        ContactOptions::List {  } => {
+                            info!("Listing contact points");
+                            let _result = client.alerting_provisioning().contact_point().list();
                         },
                     }
                 }
