@@ -91,6 +91,12 @@ pub enum DashboardCommands {
     List {
         #[arg(short, long)]
         query : Option<String>,
+        #[arg(short, long)]
+        verbose : bool,
+    },
+    Get {
+        #[arg(long)]
+        uid : String,
     }
 }
 
@@ -173,14 +179,17 @@ fn main() {
                         .with_folder_id(6)
                         .send();
                 },
-                DashboardCommands::List { query } => {
+                DashboardCommands::List { query,verbose } => {
                     info!("Searching dashboards");
                     let results = client.search().dashboard(query);
                     match results {
                         Ok(r) => {
                             let mut output = String::from(format!("{} results.\n",r.len()));
                             r.into_iter().for_each(|dm| {
-                                output.push_str(&dm.title);
+                                output.push_str(&dm.title.unwrap_or("no title".to_string()));
+                                if verbose {
+                                    output.push_str(format!(" [uid={}]",&dm.uid.unwrap()).as_str());
+                                }
                                 output.push_str("\n");
                             });
                             println!("Dashboards: {}",output);
@@ -191,6 +200,21 @@ fn main() {
                        
                     }
                     
+                },
+                DashboardCommands::Get { uid } => {
+                    info!("Getting Dashboard: {}",&uid);
+                    let results = client.dashboard().get(uid.clone());
+                    match results {
+                        Ok(r) => {
+                            println!("Title: {} [{}]\n",
+                                r.dashboard.title.unwrap_or_default(),
+                                r.dashboard.schema_version.unwrap_or_default()
+                            );
+                        },
+                        Err(e) => {
+                            error!("Error getting dashboard {} : {}",uid.clone(),e);
+                        }
+                    }
                 }
             }
         },
