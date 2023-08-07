@@ -2,7 +2,9 @@
 //! 
 use crate::common::error::GrafanaError;
 use crate::common::api::Api;
+
 use serde::Deserialize;
+use std::fmt;
 
 const DASHBOARD_PATH : &str = "dashboards";
 const DASHBOARD_UID_PATH : &str = "uid";
@@ -11,6 +13,18 @@ const DASHBOARD_UID_PATH : &str = "uid";
 #[derive(PartialEq,Debug,Deserialize)]
 pub struct PanelModel {
     title   : String,
+    id  : u16,
+}
+
+impl fmt::Display for PanelModel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut output = String::default();
+        output.push_str(format!("Title\t: {} [{}]",
+            self.title.clone(),
+            self.id,
+        ).as_str());
+        writeln!(f, "{output}")
+    }
 }
 
 /// Complete Dashboard Model
@@ -20,7 +34,8 @@ pub struct DashboardModel {
     id : Option<u32>,
     /// Unique Id of Dashboard, used in other queries
     pub uid : Option<String>,
-    panels : Option<Vec<PanelModel>>,
+    /// Vector of panels
+    pub panels : Option<Vec<PanelModel>>,
     /// Title of dashboard
     pub title : Option<String>,
     tags : Option<Vec<String>>,
@@ -28,6 +43,19 @@ pub struct DashboardModel {
     /// Schema Version
     pub schema_version : Option<u16>,
     refresh : Option<String>,
+    /// Dashboard Version
+    pub version : Option<u16>,
+}
+
+impl fmt::Display for DashboardModel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut output = String::default();
+        output.push_str(format!("Title\t: {}\n",self.title.clone().unwrap_or_default()).as_str());
+        output.push_str(format!("UID\t: {}\n",self.uid.clone().unwrap()).as_str());
+        output.push_str(format!("Version\t: {}\n",self.version.unwrap()).as_str());
+        output.push_str(format!("Schema\t: {}\n",self.schema_version.unwrap()).as_str());
+        write!(f, "{output}" )
+    }
 }
 
 /// Dashboard meta-data
@@ -67,7 +95,9 @@ impl Dashboard {
     /// # Examples
     /// ```
     /// # use grafana_lib::community::dashboard::{Dashboard,DashboardBuilder,PanelBuilder};
-    /// # let dashboard = Dashboard::new();
+    /// # use grafana_lib::common::api::Api;
+    /// # let api = Api::default();
+    /// # let dashboard = Dashboard::new(api);
     /// let model = DashboardBuilder::new(String::from("My Dashboard"))
     ///     .build();
     /// dashboard
@@ -139,7 +169,7 @@ impl PanelBuilder {
     }
     /// Build a Panel
     pub fn build(self) -> PanelModel {
-        PanelModel { title : self.title, }
+        PanelModel { title : self.title, id : 0}
     }
 }
 
@@ -153,6 +183,7 @@ pub struct DashboardBuilder {
     tags : Option<Vec<String>>,
     timezone : Option<String>,
     schema_version : u16,
+    version : u16,
     refresh : Option<String>,
     folder_id : Option<u16>,
     folder_uid: Option<String>,
@@ -171,6 +202,7 @@ impl DashboardBuilder {
             tags : None,
             timezone : None,
             schema_version : 0,
+            version : 0,
             refresh : None,
             folder_id : None,
             folder_uid : None,
@@ -231,6 +263,7 @@ impl DashboardBuilder {
             timezone : self.timezone,
             schema_version : Some(self.schema_version),
             refresh : self.refresh,
+            version : Some(self.version),
         }
     }
 }
@@ -251,6 +284,7 @@ mod test {
             schema_version : Some(0),
             tags : None,
             refresh : None,
+            version : Some(0),
         };
         assert_eq!(dashboard,test_dashboard);
     }
@@ -268,6 +302,7 @@ mod test {
             schema_version : Some(1),
             tags : None,
             refresh : None,
+            version: Some(0),
         };
         assert_eq!(dashboard,test_dashboard);
     }
