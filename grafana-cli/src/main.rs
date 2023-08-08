@@ -136,7 +136,7 @@ fn main() {
     env_logger::init();
 
     // Create a client to use for cli
-    let client = Client::new(Config::get("GRAFANA_HOST").unwrap());
+    let client = Client::new(Config::get("GRAFANA_HOST").expect("GRAFANA_HOST not defined"));
 
     match args.command {
         Some(Commands::Alerting { cmd }) => {
@@ -207,6 +207,7 @@ fn main() {
                     match results {
                         Ok(r) => {
                             println!("{}",r.dashboard);
+                            println!("{}",r.meta);
                             // Optionally display panels
                             if true {
                                 let panels = r.dashboard.panels.unwrap();
