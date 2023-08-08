@@ -14,14 +14,16 @@ const DASHBOARD_UID_PATH : &str = "uid";
 pub struct PanelModel {
     title   : String,
     id  : u16,
+    r#type : String,
 }
 
 impl fmt::Display for PanelModel {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut output = String::default();
-        output.push_str(format!("Title\t: {} [{}]",
+        output.push_str(format!("Title\t: {} [{}] - {}",
             self.title.clone(),
             self.id,
+            self.r#type,
         ).as_str());
         writeln!(f, "{output}")
     }
@@ -178,16 +180,22 @@ impl Dashboard {
 /// Builder for Panels
 pub struct PanelBuilder {
     title : String,
+    r#type : String,
 }
 
 impl PanelBuilder {
     /// Create a new PanelBuilder object
     pub fn new(title : String) -> PanelBuilder {
-        PanelBuilder { title } 
+        PanelBuilder { title, r#type : String::default() } 
+    }
+    /// Set type of panel
+    pub fn with_type(mut self, r#type : String) -> PanelBuilder {
+        self.r#type = r#type;
+        self
     }
     /// Build a Panel
     pub fn build(self) -> PanelModel {
-        PanelModel { title : self.title, id : 0}
+        PanelModel { title : self.title, id : 0, r#type : self.r#type}
     }
 }
 
