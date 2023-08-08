@@ -60,7 +60,25 @@ impl fmt::Display for DashboardModel {
 
 /// Dashboard meta-data
 #[derive(Debug,PartialEq,Default,Deserialize)]
-pub struct MetaModel {}
+#[serde(rename_all = "camelCase")]
+pub struct MetaModel {
+    /// Folder Name
+    pub folder_title : Option<String>,
+    /// Original creator of the dashboard
+    pub created_by  : Option<String>,
+    /// Last updated by
+    pub updated_by  : Option<String>,
+}
+
+impl fmt::Display for MetaModel {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut output = String::default();
+        output.push_str(format!("Folder\t: {}\n",self.folder_title.clone().unwrap_or_default()).as_str());
+        output.push_str(format!("Created\t: {}\n",self.created_by.clone().unwrap_or_default()).as_str());
+        output.push_str(format!("Updated\t: {}\n",self.updated_by.clone().unwrap_or_default()).as_str());
+        write!(f, "{output}" )
+    }
+}
 
 /// Full Dashboard Model
 #[derive(Debug,PartialEq,Deserialize)]
