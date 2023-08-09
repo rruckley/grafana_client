@@ -20,9 +20,11 @@ pub struct AnnotationsModel {
 impl fmt::Display for AnnotationsModel {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut output = String::default();
-        output.push_str(format!("Text\t: {}\n",self.text.clone()).as_str());
-        output.push_str(format!("Dashboard\t: {}\n",self.dashboard_id).as_str());
-        output.push_str(format!("Panel\t: {}\n",self.panel_id).as_str());
+        output.push_str(format!("[D:{}, P:{}]\tText\t: {}\n",
+            self.dashboard_id,
+            self.panel_id,
+            self.text.clone()).as_str()
+        );
         write!(f, "{output}" )
     }
 }
