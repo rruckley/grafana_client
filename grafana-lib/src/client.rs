@@ -23,7 +23,7 @@ pub struct Client {
     /// Admin API
     pub admin : Admin,
     /// Annoations API
-    pub annotations : Annotations,
+    annotations : Option<Annotations>,
     /// Alert Provsioning API
     alerting_provisioning : Option<AlertingProvisioning>,
     /// Authentication API
@@ -53,7 +53,7 @@ impl Client {
             api,
             config : Config::new(url),
             admin : Admin {},
-            annotations : Annotations {  },
+            annotations : None,
             alerting_provisioning : None,
             authentication : Authentication {  },
             dashboard : None,
@@ -61,6 +61,24 @@ impl Client {
             search : None,
             data_source : None,
             organization : None,
+        }
+    }
+
+    /// Access instance of Annotations API
+    /// 
+    /// # Example
+    /// ```
+    /// # use grafana_lib::client::Client;
+    /// # let client = Client::new(String::from("http://localhost:3000/"));
+    /// let ap = client.annotations();
+    /// ```
+    pub fn annotations(mut self) -> Annotations {
+        match self.annotations {
+            Some(a) => a,
+            None => {
+                self.annotations = Some(Annotations::new(self.api));
+                self.annotations.unwrap()
+            }
         }
     }
 
@@ -83,12 +101,12 @@ impl Client {
 
     /// Return an instance of Dashboard API
     pub fn dashboard(mut self) -> Dashboard {
-        match self.dashboard {
-            Some(d) => d,
-            None => {
+        match self.dashboard {            None => {
                 self.dashboard = Some(Dashboard::new(self.api));
                 self.dashboard.unwrap()
             }
+            Some(d) => d,
+
         }
     }
 
