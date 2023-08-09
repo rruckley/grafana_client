@@ -30,6 +30,10 @@ pub enum Commands {
         #[command(subcommand)]
         cmd : AlertingCommands,
     },
+    Annotations {
+        #[command(subcommand)]
+        cmd : AnnotationsCommands,
+    },
     Dashboard {
         #[command(subcommand)]
         cmd : DashboardCommands,
@@ -58,6 +62,14 @@ pub enum AlertingCommands {
         #[command(subcommand)]
         opts : ContactOptions,
     } 
+}
+
+#[derive(Subcommand,Debug)]
+pub enum AnnotationsCommands {
+    List {
+        #[arg(short,long)]
+        limit : Option<u16>,
+    }
 }
 
 #[derive(Subcommand,Debug)]
@@ -164,6 +176,19 @@ fn main() {
                             let _result = client.alerting_provisioning().contact_point().list();
                         },
                     }
+                }
+            }
+        },
+        Some(Commands::Annotations { cmd }) => {
+            info!("Executing Annotations");
+            match cmd {
+                AnnotationsCommands::List { limit } => {
+                    let result = client.annotations().list(limit).unwrap();
+                    println!("Annotations: {}",result.len());
+                    result.into_iter().for_each(|a| {
+                        // Output each model
+                        print!("{}",a);
+                    })
                 }
             }
         },
