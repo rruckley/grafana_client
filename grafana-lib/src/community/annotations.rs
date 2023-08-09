@@ -63,7 +63,7 @@ impl Annotations {
     /// ```
     /// # use grafana_lib::client::Client;
     /// # let client = Client::new(String::from("http://localhost:3000"));
-    /// let result = client.annotations().list(Some(10));
+    /// let result = client.annotations().list(Some(10),None);
     /// ```
     pub fn list(&self,
             limit : Option<u16>,
