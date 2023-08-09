@@ -7,6 +7,7 @@ use serde::Deserialize;
 use std::fmt;
 
 const ANNOTATION_PATH : &str = "annotations";
+const ANNOTATION_LIMIT : u16 = 25;
 
 /// Annotations Model
 #[derive(Debug,Default,Deserialize)]
@@ -64,11 +65,15 @@ impl Annotations {
     /// # let client = Client::new(String::from("http://localhost:3000"));
     /// let result = client.annotations().list(Some(10));
     /// ```
-    pub fn list(&self,limit : Option<u16>) -> Result<Vec<AnnotationsModel>,GrafanaError> {
-        let path = match limit {
-            Some(l) => format!("{}?limit={}",ANNOTATION_PATH,l),
-            None => format!("{}",ANNOTATION_PATH)
-        };
+    pub fn list(&self,
+            limit : Option<u16>,
+            dashboard_id : Option<u16>) -> Result<Vec<AnnotationsModel>,GrafanaError> {
+        let limit = limit.unwrap_or(ANNOTATION_LIMIT);
+        let mut path = format!("{}?limit={}",ANNOTATION_PATH,limit);
+        // Add options
+        if dashboard_id.is_some() {
+            path.push_str(format!("&dashboardId={}",dashboard_id.unwrap()).as_str())
+        }
         match self.api.get(path) {
             Ok(r) => {
                 let result : Vec<AnnotationsModel> = serde_json::from_str(r.as_str()).unwrap();

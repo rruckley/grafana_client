@@ -69,6 +69,8 @@ pub enum AnnotationsCommands {
     List {
         #[arg(short,long)]
         limit : Option<u16>,
+        #[arg(short,long)]
+        dashboard : Option<u16>,
     }
 }
 
@@ -182,8 +184,8 @@ fn main() {
         Some(Commands::Annotations { cmd }) => {
             info!("Executing Annotations");
             match cmd {
-                AnnotationsCommands::List { limit } => {
-                    let result = client.annotations().list(limit).unwrap();
+                AnnotationsCommands::List { limit, dashboard } => {
+                    let result = client.annotations().list(limit,dashboard).unwrap();
                     println!("Annotations: {}",result.len());
                     result.into_iter().for_each(|a| {
                         // Output each model
