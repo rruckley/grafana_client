@@ -111,6 +111,8 @@ pub enum DashboardCommands {
     Get {
         #[arg(long)]
         uid : String,
+        #[arg(short, long)]
+        panels : bool,
     }
 }
 
@@ -133,7 +135,9 @@ pub enum FolderCommands {
     },
     List {
         #[arg(short, long)]
-        query : Option<String>
+        query : Option<String>,
+        #[arg(short, long)]
+        verbose : bool,
     }
 }
 
@@ -215,7 +219,7 @@ fn main() {
                             r.into_iter().for_each(|dm| {
                                 output.push_str(&dm.title.unwrap_or("no title".to_string()));
                                 if verbose {
-                                    output.push_str(format!(" [uid={}]",&dm.uid.unwrap()).as_str());
+                                    output.push_str(format!("\t[uid={}]",&dm.uid.unwrap()).as_str());
                                 }
                                 output.push('\n');
                             });
@@ -228,7 +232,7 @@ fn main() {
                     }
                     
                 },
-                DashboardCommands::Get { uid } => {
+                DashboardCommands::Get { uid, panels } => {
                     info!("Getting Dashboard: {}",&uid);
                     let results = client.dashboard().get(uid.clone());
                     match results {
@@ -236,7 +240,7 @@ fn main() {
                             println!("{}",r.dashboard);
                             println!("{}",r.meta);
                             // Optionally display panels
-                            if true {
+                            if panels {
                                 let panels = r.dashboard.panels.unwrap();
                                 println!("Panels\t: {}",panels.len());
                                 panels.into_iter().for_each(|p| {
@@ -259,7 +263,7 @@ fn main() {
                     let model = FolderModel::new(name);
                     let _result = client.folder().create(model);
                 }
-                FolderCommands::List { query } => {
+                FolderCommands::List { query , verbose} => {
                     
                     let results = client.search().folder(query);
                     match results {
@@ -267,6 +271,9 @@ fn main() {
                             let mut output = format!("{} Results.\n",r.len());
                             r.into_iter().for_each(|fm| {
                                 output.push_str(&fm.title);
+                                if verbose {
+                                    output.push_str(format!("\t[uid={}]",fm.uid.unwrap_or(String::from("Undef."))).as_str());
+                                }
                                 output.push('\n');
                             });
                             println!("Folders: {}",output);
