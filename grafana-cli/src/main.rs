@@ -27,27 +27,27 @@ struct Args {
 #[derive(Subcommand,Debug)]
 pub enum Commands {
     Alerting {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Alerting")]
         cmd : AlertingCommands,
     },
     Annotations {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Annotations")]
         cmd : AnnotationsCommands,
     },
     Dashboard {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Dashboards")]
         cmd : DashboardCommands,
     },
     DataSource {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Data Sources")]
         cmd : DataSourceCommands,
     },
     Folder {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Folders")]
         cmd : FolderCommands,
     },
     Organization {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Organisations")]
         cmd : OrganizationCommands,
     }
 }
@@ -55,11 +55,11 @@ pub enum Commands {
 #[derive(Subcommand,Debug)]
 pub enum AlertingCommands {
     Rules {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Alerting Rules")]
         opts : RuleOptions,
     },   
     ContactPoints {
-        #[command(subcommand)]
+        #[command(subcommand, help = "Manage Alerting Contact Points")]
         opts : ContactOptions,
     } 
 }
