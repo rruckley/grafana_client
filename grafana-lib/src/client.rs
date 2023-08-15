@@ -48,7 +48,8 @@ impl Client {
     /// let client = Client::new(String::from("http://localhost:3000/"));
     /// ```
     pub fn new(url : String) -> Client {
-        let api = Api::new(url.clone(),Config::get("TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
+        let config = Config::new(url.clone());
+        let api = Api::new(url.clone(),config.get("TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
         Client {
             api,
             config : Config::new(url),
@@ -121,9 +122,11 @@ impl Client {
         match self.data_source {
             Some(ds) => ds,
             None => {
-                let host = Config::get("GRAFANA_HOST").unwrap_or(String::from("http://localhost:3000"));
-                let token = Config::get("GRAFANA_TOKEN").unwrap_or(String::from("TOKEN"));
-                self.data_source = Some(DataSource::new(host,token));
+                self.data_source = Some(DataSource::new(
+                    // Safe to simply unwrap here as we would have paniced earlier if these weren't defined
+                    self.config.get("GRAFANA_HOST").unwrap(),
+                    self.config.get("GRAFANA_TOKEN").unwrap(),
+                ));
                 self.data_source.unwrap()
             }
         }
@@ -156,9 +159,11 @@ impl Client {
         match self.search {
             Some(s) => s,
             None => {
-                let host = Config::get("GRAFANA_HOST").expect("GRAFANA_HOST not found");
-                let token = Config::get("GRAFANA_TOKEN").expect("GRAFANA_TOKEN not found");
-                self.search = Some(Search::new(host,token));
+                self.search = Some(Search::new(
+                    self.config.get("GRAFANA_HOST").unwrap(),
+                    self.config.get("GRAFANA_TOKEN").unwrap()
+                )
+                );
                 self.search.unwrap()
             }
         }
