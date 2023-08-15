@@ -21,10 +21,20 @@ impl Config {
         format!("https://{}",self.host).to_string()
     }
     /// Get a single configuration first from ENV then falling back to hard coded defaults
-    pub fn get(item : & str) -> Option<String> {
-        match env::var(item) {
-            Ok(i) => Some(i),
+    pub fn get(&self, item : & str) -> Option<String> {
+        if item == "GRAFANA_HOST" {
+            return Some(self.host.clone());
+        }
+        match Config::get_env(item) {
+            Some(i) => Some(i),
             _ => Config::get_default(item),
+        }
+    }
+    /// Get a configuration from the environment
+    pub fn get_env(item : &str) -> Option<String> {
+        match env::var(item) {
+            Ok(r) => Some(r),
+            Err(_) => None,
         }
     }
 
