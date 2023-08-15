@@ -16,7 +16,7 @@ use log::{info,error};
 #[command(about = "Grafana CLI using the Grafana interface crate")]
 struct Args {
     /// Optional host, overrides GRAFANA_HOST environment 
-    #[arg(long)]
+    #[arg(long, help = "Overrides the GRAFANA_HOST environment")]
     host: Option<String>,
 
     #[command(subcommand)]
@@ -67,9 +67,9 @@ pub enum AlertingCommands {
 #[derive(Subcommand,Debug)]
 pub enum AnnotationsCommands {
     List {
-        #[arg(short,long)]
+        #[arg(short,long, help = "Limit the numnber of responses")]
         limit : Option<u16>,
-        #[arg(short,long)]
+        #[arg(short,long, help = "Filter on a specific dashboard by id")]
         dashboard : Option<u16>,
     }
 }
@@ -80,7 +80,7 @@ pub enum ContactOptions {
 
     },
     Create {
-        #[arg(short,long)]
+        #[arg(short,long, help = "Name of contact point")]
         name : String,
     }
 }
@@ -91,7 +91,7 @@ pub enum RuleOptions {
 
     },
     Create {
-        #[arg(short, long)]
+        #[arg(short, long, help = "Name of rule")]
         name : String,
     }
 }
@@ -99,19 +99,19 @@ pub enum RuleOptions {
 #[derive(Subcommand,Debug)]
 pub enum DashboardCommands {
     Create {
-        #[arg(short, long)]
+        #[arg(short, long, help = "Name of new dashboard")]
         name : String,
     },
     List {
-        #[arg(short, long)]
+        #[arg(short, long, help = "Filter by string match")]
         query : Option<String>,
-        #[arg(short, long)]
+        #[arg(short, long, help = "Include more info such as UID in output")]
         verbose : bool,
     },
     Get {
-        #[arg(long)]
+        #[arg(long, help = "Unique id of the dashboard")]
         uid : String,
-        #[arg(short, long)]
+        #[arg(short, long, help = "Also show the panel information")]
         panels : bool,
     }
 }
@@ -119,7 +119,7 @@ pub enum DashboardCommands {
 #[derive(Subcommand,Debug)]
 pub enum DataSourceCommands {
     Create {
-        #[arg(short, long)]
+        #[arg(short, long, help = "Name of the data source")]
         name : String,
     },
     List {
@@ -130,7 +130,7 @@ pub enum DataSourceCommands {
 #[derive(Subcommand,Debug)]
 pub enum FolderCommands {
     Create {
-        #[arg(short, long)]
+        #[arg(short, long, help = "Name of folder")]
         name : String,
     },
     List {
