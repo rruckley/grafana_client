@@ -134,9 +134,9 @@ pub enum FolderCommands {
         name : String,
     },
     List {
-        #[arg(short, long)]
+        #[arg(short, long, help="Filter results")]
         query : Option<String>,
-        #[arg(short, long)]
+        #[arg(short, long, help="Show UID information")]
         verbose : bool,
     }
 }
@@ -144,7 +144,7 @@ pub enum FolderCommands {
 #[derive(Subcommand,Debug)]
 pub enum OrganizationCommands {
     Create {
-        #[arg(short, long)]
+        #[arg(short, long, help="Name of the new Organization")]
         name : String,
     },
 }
@@ -153,9 +153,21 @@ fn main() {
     let args = Args::parse();
     env_logger::init();
 
+    // Find a host
+    let host = match Config::get_env("GRAFANA_HOST") {
+        Some(h) => h,
+        None => {
+            match args.host {
+                Some(h) => h,
+                None => String::from("https://play.grafana.com")
+            }
+        }
+    };
+    info!("Using host :\t{}",&host);
     // Create a client to use for cli
-    let client = Client::new(Config::get("GRAFANA_HOST").expect("GRAFANA_HOST not defined"));
+    let client = Client::new(host);
 
+    
     match args.command {
         Some(Commands::Alerting { cmd }) => {
             info!("Executing Alerting");
