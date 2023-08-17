@@ -48,11 +48,12 @@ impl Client {
     /// let client = Client::new(String::from("http://localhost:3000/"));
     /// ```
     pub fn new(url : String) -> Client {
-        let config = Config::new(url.clone());
-        let api = Api::new(url.clone(),config.get("TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
+        let config = Config::new(url.clone())
+            .with_token(Config::get_env("GRAFANA_TOKEN").unwrap_or(String::from("DUMMYTOKEN")));
+        let api = Api::new(url.clone(),config.get("GRAFANA_TOKEN").unwrap());
         Client {
             api,
-            config : Config::new(url),
+            config,
             admin : Admin {},
             annotations : None,
             alerting_provisioning : None,
@@ -159,11 +160,7 @@ impl Client {
         match self.search {
             Some(s) => s,
             None => {
-                self.search = Some(Search::new(
-                    self.config.get("GRAFANA_HOST").unwrap(),
-                    self.config.get("GRAFANA_TOKEN").unwrap()
-                )
-                );
+                self.search = Some(Search::new(self.api));
                 self.search.unwrap()
             }
         }
