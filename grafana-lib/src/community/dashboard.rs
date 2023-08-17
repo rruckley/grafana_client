@@ -166,7 +166,7 @@ impl Dashboard {
         let path = format!("{}/{}/{}",DASHBOARD_PATH,DASHBOARD_UID_PATH,uid);
         match self.api.get(path) {
             Ok(r) => {
-                let result : FullDashboardModel = serde_json::from_str(r.as_str()).unwrap();
+                let result : FullDashboardModel = serde_json::from_str(r.as_str()).expect("Could not parse JSON");
                 Ok(result)
             },
             Err(e) => {
