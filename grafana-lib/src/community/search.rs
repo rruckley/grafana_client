@@ -28,10 +28,9 @@ pub struct Search {
 
 impl Search {
     /// Create a new search instance
-    pub fn new(host : String, token : String) -> Search {
-        let api = Api::new(host,token);
+    pub fn new(api : Api) -> Search {
         Search {
-            api,
+            api
         }
     }
     /// Search dashboards according to query string
