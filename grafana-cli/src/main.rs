@@ -176,7 +176,8 @@ fn main() {
                     match opts {
                         RuleOptions::Create { name } => {
                             info!("Creating alerting rule: {name}");
-                            
+                            // Need to call library to create alert rule
+                            let _result = client.alerting_provisioning().alert_rule().create(name).build();
                         },
                         RuleOptions::List {  } => {
                             info!("Listing alerting rules");
