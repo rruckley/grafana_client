@@ -15,12 +15,13 @@ const ALERT_CONTACT_PATH : &str = "contact-points";
 pub struct AlertRule {
     #[serde(skip_serializing)]
     api : Api,
+    title : Option<String>,
 }
 
 impl AlertRule {
     /// Create new instance of Alert Rule Model
     pub fn new(api : Api) -> AlertRule {
-        AlertRule { api }
+        AlertRule { api, title : None }
     }
     /// Generate list of Alert Rules for alerting
     pub fn list(&self) -> Result<String,GrafanaError> {
@@ -34,6 +35,19 @@ impl AlertRule {
             Ok(r) => Ok(r),
             Err(e) => Err(GrafanaError::new(e.to_string(), String::from("-1"))),
         }
+    }
+
+    /// Create an instance of AlertRule
+    pub fn create(mut self, title : String) -> AlertRule {
+        self.title = Some(title);
+        self
+    }
+
+    /// Send instance of Alert Rule to Grafana
+    pub fn build(&self) -> Result<String,String> {
+        let body = serde_json::to_string(self).unwrap();
+        debug!("BODY: {}",body);
+        Err(String::from("Not implemented"))
     }
 }
 
