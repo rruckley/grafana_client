@@ -1,6 +1,9 @@
 //! Grafana Client
 //! 
 
+use crate::common::config::Config;
+use crate::common::api::Api;
+
 use crate::community::admin::Admin;
 use crate::community::annotations::Annotations;
 use crate::community::alerting_provisioning::AlertingProvisioning;
@@ -10,9 +13,6 @@ use crate::community::data_source::DataSource;
 use crate::community::folder::Folder;
 use crate::community::organization::Organization;
 use crate::community::search::Search;
-
-use crate::common::config::Config;
-use crate::common::api::Api;
 
 /// Client Structure
 pub struct Client {
